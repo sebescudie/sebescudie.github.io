@@ -1,0 +1,41 @@
+baseURL = "sebescudie.github.io"
+languageCode = "en-us"
+title = "sebescudie"
+theme="hugo-developer-portfolio"
+
+[params.plugins]
+  # CSS Plugins
+  [[params.plugins.css]]
+  URL = "https://cdn.jsdelivr.net/npm/uikit@3.2.6/dist/css/uikit.min.css"
+  # JS Plugins
+  [[params.plugins.js]]
+  URL = "https://cdn.jsdelivr.net/npm/uikit@3.2.6/dist/js/uikit.min.js"
+  [[params.plugins.js]]
+  URL = "https://cdn.jsdelivr.net/npm/uikit@3.2.6/dist/js/uikit-icons.min.js"
+
+# navigation
+[menu]
+  [[menu.main]]
+  name = "about"
+  URL = "about"
+  #[[menu.main]]
+  #name = "blog"
+  #URL = "blog"
+  [[menu.main]]
+  name = "portfolio"
+  URL = "portfolio"
+  [[menu.main]]
+  name = "contact"
+  URL = "contact"
+
+[params]
+home = "home" # What you want the homepage to show up as in the menu bar
+# Meta data
+description = "seb escudie, multimedia software developer from paris"
+author = "seb escudie"
+
+# This contains the contact information for the footer
+[params.footer]
+email = "ping {at} sebescudie.fr"
+address = "paris, fr"
+googlemaps = "https://www.openstreetmap.org/#map=15/48.8283/2.3695"

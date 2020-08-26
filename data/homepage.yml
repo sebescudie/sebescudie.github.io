@@ -1,0 +1,50 @@
+---
+banner:
+  title: ""
+social:
+  twitter: "sebescudie"
+  linkedin: ""
+  github: "sebescudie"
+  gitlab: ""
+  facebook: ""
+  instagram: ""
+  gmail:
+about:
+  enable: true
+  content: hello, i'm seb escudie, multimedia software developer from paris. for the last six years, i've  been developing interactive installations for the events business.
+  button:
+    btnText: more detailz
+    URL: "/about"
+skill:
+  enable: false
+  item:
+    - title: ""
+      logo: ""
+      description: ""
+experience:
+  enable: false
+  item:
+    - logo: ""
+      title: ""
+      company: ""
+      duration: ""
+hackathons:
+  enable: false
+  item:
+    - title: ""
+      description: ""
+      image: ""
+      url: ""
+certifications:
+  enable: false
+  item:
+    - title: ""
+      image: ""
+      url: ""
+education:
+  enable: false
+  item:
+    - title: ""
+      year: ""
+      academy: ""
+      image: ""

@@ -1,0 +1,8 @@
+portfolio:
+  filter:
+    - label: plugin
+      value: plugin
+    - label: commercial
+      value: commercial
+    - label: installation
+      value: installation
