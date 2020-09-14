@@ -7,35 +7,17 @@
 {{ $index := resources.Get "css/index.css" | minify }}
 <link rel="stylesheet" href="{{ $index.Permalink | relURL}}">
 <script src="https://unpkg.com/ionicons@5.1.2/dist/ionicons.js"></script>
-<!--
-  _    _
- | |  | |                             /\
- | |__| |   ___   _ __    ___        /  \     _ __    ___    __ _
- |  __  |  / _ \ | '__|  / _ \      / /\ \   | '__|  / _ \  / _` |
- | |  | | |  __/ | |    | (_) |    / ____ \  | |    |  __/ | (_| |
- |_|  |_|  \___| |_|     \___/    /_/    \_\ |_|     \___|  \__,_|
 
- -->
+<!-- intro -->
 <section>
     <div class="uk-container uk-margin-xlarge-top uk-margin-xlarge-bottom">
 
         <h1 class="uk-heading-large">{{ .Site.Data.homepage.banner.title | safeHTML }}</h1>
     </div>
-
-
 </section>
 
-<!--
-             _                       _
-     /\     | |                     | |
-    /  \    | |__     ___    _   _  | |_
-   / /\ \   | '_ \   / _ \  | | | | | __|
-  / ____ \  | |_) | | (_) | | |_| | | |_
- /_/    \_\ |_.__/   \___/   \__,_|  \__|
-
--->
-{{ if .Site.Data.homepage.about.enable }}
 <!-- about -->
+{{ if .Site.Data.homepage.about.enable }}
 
 <section class="uk-margin-large-top">
     <div class="uk-container">
@@ -48,23 +30,11 @@
             {{end}}
         </div>
     </div>
-
 </section>
 
-
-<!-- /about -->
 {{ end }}
 
-<!--
-   _____                  _           _     _        _           _
-  / ____|                (_)         | |   | |      (_)         | |
- | (___     ___     ___   _    __ _  | |   | |       _   _ __   | | __  ___
-  \___ \   / _ \   / __| | |  / _` | | |   | |      | | | '_ \  | |/ / / __|
-  ____) | | (_) | | (__  | | | (_| | | |   | |____  | | | | | | |   <  \__ \
- |_____/   \___/   \___| |_|  \__,_| |_|   |______| |_| |_| |_| |_|\_\ |___/
-
-
--->
+<!-- social -->
 <div class="uk-text-center uk-margin-xlarge-bottom uk-margin-xlarge-top">
     <ul class="uk-list">
         {{ range .Site.Languages -}}
@@ -75,27 +45,24 @@
     </ul>
 </div>
 
-<div class="uk-child-width-expand@s uk-text-center" uk-grid>
+<div class="uk-child-width-1-4 uk-text-center" uk-grid>
+    <div></div>
     <div>
         {{ if .Site.Data.homepage.social.twitter }}
-            <div class="uk-text-large uk-text-bold">twitter
+            <div class="uk-text-large uk-text-bold uk-text-center">twitter
             <a href="https://twitter.com/{{ .Site.Data.homepage.social.twitter }}" > <ion-icon name="logo-twitter"> Twitter </ion-icon></a>
             </div> 
         {{ end }}
     </div>
     <div>
         {{ if .Site.Data.homepage.social.github }}
-            <div class="uk-text-large uk-text-bold">github
+            <div class="uk-text-large uk-text-bold ">github
             <a href="https://github.com/{{ .Site.Data.homepage.social.github }}"> <ion-icon name="logo-github"></ion-icon> </a>
             </div> 
         {{ end }}
     </div>
+    <div></div>
 </div>
-
-
-
-
-
 
 <!-- portfolio -->
 {{ if .Site.Data.homepage.portfolio.enable }}
@@ -129,18 +96,7 @@
 {{ end }}
 
 
-<!--
-
-   _____   _      _   _   _
-  / ____| | |    (_) | | | |
- | (___   | | __  _  | | | |  ___
-  \___ \  | |/ / | | | | | | / __|
-  ____) | |   <  | | | | | | \__ \
- |_____/  |_|\_\ |_| |_| |_| |___/
-
-
-
--->
+<!-- skills -->
 {{ if .Site.Data.homepage.skill.enable }}
 
 {{ range .Site.Data.homepage.skill.item }}
@@ -170,36 +126,10 @@
             </div>
             {{ end }}
         </div>
-
     </div>
-
 </section>
 
-
-
-
-
-
-<!-- /skills -->
 {{ end }}
-
-
-
-<!--
-
-  ______                                _
- |  ____|                              (_)
- | |__    __  __  _ __     ___   _ __   _    ___   _ __     ___    ___
- |  __|   \ \/ / | '_ \   / _ \ | '__| | |  / _ \ | '_ \   / __|  / _ \
- | |____   >  <  | |_) | |  __/ | |    | | |  __/ | | | | | (__  |  __/
- |______| /_/\_\ | .__/   \___| |_|    |_|  \___| |_| |_|  \___|  \___|
-                 | |
-                 |_|
-
--->
-
-
-
 
 <!-- experience -->
 {{ if .Site.Data.homepage.experience.enable }}
@@ -234,10 +164,6 @@
 <!-- ./experience -->
 
 
-
-
-
-
 <!-- Certifications -->
 {{ if .Site.Data.homepage.certifications.enable }}
 
@@ -268,10 +194,6 @@
 
 {{ end }}
 
-<!-- /Certifications -->
-
-
-
 <!-- Awards -->
 {{ if .Site.Data.homepage.awards.enable }}
 
@@ -295,10 +217,6 @@
     </div>
 
 </section>
-
-
-
-
 
 {{ end }}
 
@@ -354,20 +272,9 @@
 {{end}}
 
 
-<!--
-
-  ______       _                          _     _
- |  ____|     | |                        | |   (_)
- | |__      __| |  _   _    ___    __ _  | |_   _    ___    _ __
- |  __|    / _` | | | | |  / __|  / _` | | __| | |  / _ \  | '_ \
- | |____  | (_| | | |_| | | (__  | (_| | | |_  | | | (_) | | | | |
- |______|  \__,_|  \__,_|  \___|  \__,_|  \__| |_|  \___/  |_| |_|
-
-
-
--->
+<!-- edu -->
 {{ if .Site.Data.homepage.education.enable }}
-<!-- education -->
+
 <section class="uk-margin-xlarge-bottom">
     <div class="uk-container">
 
@@ -395,13 +302,6 @@
             {{ end }}
         </div>
     </div>
-
-
-
-
-
-
-
 
 </section>
 {{ end }}
