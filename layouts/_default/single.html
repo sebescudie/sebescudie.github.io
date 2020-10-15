@@ -46,6 +46,15 @@
     margin-bottom:30px;
   }
 
+  video {
+    box-shadow: 0 4px 8px 0 rgba(0, 0, 0, 0.2), 0 6px 20px 0 rgba(0, 0, 0, 0.19);
+    display: block;
+    margin: 0 auto;
+    max-width:60vw;
+    max-height:60vh;
+    margin-bottom:30px;
+  } 
+
   p { margin-bottom: 1em; }
 
   body p:last-child { margin-bottom: 0em; }
@@ -166,9 +175,33 @@
     <div class="content">
       {{.Content }}
     </div>
+
+    <hr class="full-width">
+    <section>
+    <!-- VIDEOS -->
+    <div class="content">
+      {{if isset .Params "video"}}
+          {{ range .Params.video }}
+            <video width="853" height="480" controls>
+              <source src="{{.url | absURL}}" type="video/mp4">
+            </video>
+        {{end}}
+      {{end}}
+    </div>
+
+
+    <!-- PICTURES -->
+    <div class="content">
+      {{if isset .Params "picture"}}
+          {{ range .Params.picture }}
+            <img src="{{.url | absURL}}" alt="{{.alt}}"></a>
+        {{end}}
+      {{end}}
+    </div>
+  </section>
+
   </div>
   </div>
 </section>
-
 
 {{end}}
