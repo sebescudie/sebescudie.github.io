@@ -10,6 +10,6 @@ i've  been working for 5 years at [SUPERBIEN](superbien.studio) in paris where i
 
 beside that, i'm contributing to the development of [VL.Elementa](https://github.com/vvvv-dottore/VL.Elementa/), a GUI library for the VL programming language, and i enjoy wrapping libraries for VVVV Gamma, as you can see on my [github profile](https://github.com/sebescudie).
 
-i'm also a vvvv teacher at the [Node Institute](thenodeinstitute.org).
+i'm also a vvvv teacher at the [Node Institute](thenodeinstitute.org), and gave two workshops at this year's edition of the [NODE Festival](https://20.nodeforum.org/).
 
 if you want to discuss a project or just speak, drop me a line!
