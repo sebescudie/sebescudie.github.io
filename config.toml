@@ -1,4 +1,4 @@
-baseURL = "sebescudie.github.io"
+baseURL = "https://sebescudie.github.io"
 languageCode = "en-us"
 title = "sebescudie"
 theme="hugo-developer-portfolio"
@@ -23,7 +23,7 @@ theme="hugo-developer-portfolio"
   #URL = "blog"
   [[menu.main]]
   name = "portfolio"
-  URL = "portfolio"
+  URL = "/portfolio"
   [[menu.main]]
   name = "contact"
   URL = "contact"
