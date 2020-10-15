@@ -6,3 +6,11 @@ portfolio:
       value: commercial
     - label: installation
       value: installation
+    - label: backend
+      value: backend
+    - label: software
+      value: software
+    - label: teaching
+      value: teaching
+    - label: hardware
+      value: hardware
