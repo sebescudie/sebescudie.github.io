@@ -3,7 +3,7 @@ title: "about"
 date: 2020-24-08
 description: "about page"
 author : "seb"
-authorImage : "http://www.sebescudie.github.io/images/about/profile.png"
+authorImage : "https://sebescudie.github.io/images/about/profile.png"
 ---
 
 i've  been working for 5 years at [SUPERBIEN](superbien.studio) in paris where i was in charge of back-end development for interactive installations. my weapon of choice is the [vvvv](vvvv.org) programming language (be it beta or gamma). i can also write C#, and have some experience working with Unity. i also enjoy python very much but eh, not quite there yet.
