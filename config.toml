@@ -1,4 +1,4 @@
-baseURL = "https://sebescudie.github.io"
+baseURL = ""
 languageCode = "en-us"
 title = "sebescudie"
 theme="hugo-developer-portfolio"
