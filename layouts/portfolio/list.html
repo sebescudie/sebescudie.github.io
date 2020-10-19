@@ -14,32 +14,31 @@
         {{end}}
       </ul>
 
-      <ul
-        class="js-filter uk-child-width-1-1 uk-child-width-1-4@m uk-text-center"
-        uk-grid
-        uk-height-match="target: > li > div > .fixy"
-      >
+      <ul class="js-filter uk-child-width-1-1 uk-child-width-1-4@m uk-text-center uk-margin-xlarge-bottom" uk-grid uk-height-match="target: > li > div > .fixy">
         {{ range .Data.Pages }}
+        <!--
         <li data-tags="{{delimit .Params.categories  ' '}}">
           <div class="uk-card uk-card-default" style="position: relative;">
             <div class="fixy">
               <div class="uk-card-media-top">
                 <a href="{{.Permalink| relURL}}"><img class="contain experience" src="{{.Params.Image | absURL}}" alt=""/></a>
-              </div>
+              </div>       
               <div class="uk-card-body">
                 <a href="{{.Permalink| relURL}}"><h3 class="uk-card-title">{{.Title}}</h3></a>
                 <p>{{.Params.Description}}</p>
               </div>
             </div>
-            <!--
             <div class="uk-card-footer">
-              <a href="{{.Permalink| relURL}}" class="uk-button uk-button-text"
-                >Read more</a
-              >
+              <a href="{{.Permalink| relURL}}" class="uk-button uk-button-text">Read more</a>
             </div>
-            -->
           </div>
         </li>
+        -->
+        <div>
+          <a href="{{.Permalink | relURL}}"><img data-src="{{.Params.Image | absURL}}" width="300" height="300" alt="" uk-img/></a>
+          <a href="{{.Permalink| relURL}}" class="uk-link-muted uk-padding"><h4>{{.Title}}</h3></a>
+        </div>
+
         {{end}}
       </ul>
     </div>
