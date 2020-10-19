@@ -1,5 +1,5 @@
 +++
-categories = ["backend", "hardware", "software"]
+categories = ["software", ]
 coders = []
 date = 2020-06-19T23:00:00Z
 description = "a standalone app to calibrate multiple SICK LIDARs and perform tracking with them"

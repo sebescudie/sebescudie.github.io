@@ -1,5 +1,5 @@
 +++
-categories = ["installation", "commercial" ]
+categories = ["installation", "commercial"]
 coders = []
 date = 2020-06-19T23:00:00Z
 description = "an interactive advent calendar for Audi's store in Paris"
