@@ -4,7 +4,7 @@ lastmod: 2019-10-26T15:26:15Z
 publishdate: 2018-11-23T15:26:15Z
 author: seb
 title: sebescudie
-description: french multimedia software developer
+description: multimedia software developer from paris
 images:
 - home-cover.png
 ---
