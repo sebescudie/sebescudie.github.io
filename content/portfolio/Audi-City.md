@@ -1,5 +1,5 @@
 +++
-categories = ["installation", ]
+categories = ["installation", "commercial" ]
 coders = []
 date = 2020-06-19T23:00:00Z
 description = "an interactive advent calendar for Audi's store in Paris"
@@ -17,7 +17,7 @@ alt = "kids"
 
 In 2016, the Audi City store in Paris asked [SUPERBIEN](http://superbien.studio) to turn its window into a mini advent-calendar. To do so, we equiped the window with a LIDAR and invited people to defrost it to reveal Audi's cars.
 
-As a back-end developer, I was in charge of gathering data from the LIDAR and creating the architecture of the application. We had to make the LIDAR communicate with the real-time content and schedule the automatic startup and extinction of the application.
+As a back-end developer, I was in charge of gathering data from the LIDAR and creating the architecture of the application.
 
 All the pictures below are provided by SUPERBIEN. 
 
