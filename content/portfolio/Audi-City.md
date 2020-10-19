@@ -5,7 +5,7 @@ date = 2020-06-19T23:00:00Z
 description = "an interactive advent calendar for Audi's store in Paris"
 github = []
 image = "/images/portfolio/audi_ppl_1.jpg"
-title = "Audi City christmas 2016"
+title = "Audi City Christmas 2016"
 type = "post"
 [[picture]]
 url = "/images/portfolio/audi_ppl_1.jpg"
