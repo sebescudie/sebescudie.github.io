@@ -1,5 +1,5 @@
 +++
-categories = ["software", ]
+categories = ["software"]
 coders = []
 date = 2020-06-19T23:00:00Z
 description = "a simple GUI launcher for vvvv gamma"

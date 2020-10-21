@@ -1,5 +1,5 @@
 +++
-categories = ["commercial", ]
+categories = ["commercial"]
 coders = []
 date = 2020-06-19T23:00:00Z
 description = "an escape game for google"

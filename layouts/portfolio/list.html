@@ -43,10 +43,14 @@ img
           </div>
         </li>
         -->
-        <div>
-          <a href="{{.Permalink | relURL}}"><img data-src="{{.Params.Image | absURL}}" width="300" height="300" alt="" uk-img/></a>
-          <a href="{{.Permalink| relURL}}" class="uk-link-muted uk-padding"><h4>{{.Title}}</h3></a>
-        </div>
+        
+          <li data-tags="{{delimit .Params.categories  ' '}}">
+            <div>
+              <a href="{{.Permalink | relURL}}"><img data-src="{{.Params.Image | absURL}}" width="300" height="300" alt="" uk-img/></a>
+              <a href="{{.Permalink| relURL}}" class="uk-link-muted uk-padding"><h4>{{.Title}}</h3></a>
+            </div>
+          </li>
+
 
         {{end}}
       </ul>
