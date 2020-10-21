@@ -18,7 +18,7 @@ url = "/images/portfolio/paradiso_3.jpg"
 alt = "paradiso"
 +++
 
-Cinema Paradiso is an event organized by MK2 Group in 2013 and 2015 to "celebrate the culture of cinema and entertainment in all its diversity". For both occasions, [SUPERBIEN](https://www.superbien.studio/work/cinema-paradiso-superclub) was asked to create the Super Club, turning the Grand Palais of Paris into a night club for one week.
+Cinema Paradiso is an event organized by MK2 Group in 2013 and 2015 to "celebrate the culture of cinema and entertainment in all its diversity". For both occasions, [SUPERBIEN](https://www.superbien.studio/work/cinema-paradiso-superclub) was asked to conceptualize and design the Super Club, turning the Grand Palais of Paris into a night club for one week.
 
 As a backend-developer for SUPERBIEN, I worked on the 2015 edition with [Alex Le Guillou](https://alexleguillou.com/) to create _Michel_, a generative VJing software made with vvvv beta. _Michel_ was able to generate 2D patterns and apply postfx to those. The pattern and the effets were hookable to audio analysis values or MIDI controls on the fly.
 

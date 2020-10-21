@@ -20,9 +20,7 @@ alt = "wall"
 
 In 2016, [SUPERBIEN was asked to create a giant touch senstive wall](https://www.superbien.studio/work/edf-viva-technology) for EDF's (national electricity company) booth at Viva Tech faire. The constrain for this project was to make the technology as invisible as possible. 
 
-To make the wall touch-sensitive, we hid capacitive sensors behind it to create interactive zones. This project was realy fun to work on since it also introduced lots of types of physical interactions with the wall.
-
-As a back-end developer, I was in charge of sourcing the appropriate sensors and laying out the architecture of the application. I also developed some of the mini games that users would play on the wall.
+As a back-end developer, I was in charge of sourcing the appropriate electronics and laying out the architecture of the application. I also developed some of the mini games that users would play on the wall.
 
 All the images and videos below are provided by SUPERBIEN.
 
