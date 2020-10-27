@@ -18,7 +18,7 @@ url = "/images/portfolio/edf_interactions.mp4"
 alt = "wall"
 +++
 
-In 2016, [SUPERBIEN was asked to create a giant touch senstive wall](https://www.superbien.studio/work/edf-viva-technology) for EDF's (national electricity company) booth at Viva Tech faire. The constrain for this project was to make the technology as invisible as possible. 
+In 2016, SUPERBIEN was asked by [AUDITOIRE](http://www.auditoire.com/) to create [a giant touch senstive wall](https://www.superbien.studio/work/edf-viva-technology) for EDF's (national electricity company) booth at Viva Tech faire. The constrain for this project was to make the technology as invisible as possible. 
 
 As a back-end developer, I was in charge of sourcing the appropriate electronics and laying out the architecture of the application. I also developed some of the mini games that users would play on the wall.
 

@@ -21,7 +21,7 @@ url = "/images/portfolio/ocean_ground_interaction.mp4"
 alt = "wall"
 +++
 
-Ocean is a virtual immersive aqurium I worked on with [SUPERBIEN](https://www.superbien.studio/work/oceans). A total of 11 LIDARs made the 300 meters square video content interactive.
+Oceans is a virtual immersive aquarium I worked on with [SUPERBIEN](https://www.superbien.studio/work/oceans) for [MK2+](https://mk2plus.com/) and [Altarea Cogedim](https://www.altarea.com/). A total of 11 LIDARs made the 300 meters square video content interactive.
 
 As a backend-developer, I was in charge of creating a standalone application that would allow to easily preview the data gathered by the LIDARs over the network, calibrate it (re-align the LIDARS on a 2D canvas) and perform blob-tracking on that set of data. This eventually gave birth to the LIDAR App on which you'll have more information in a [dedicated article](https://sebescudie.github.io/sebescudie.github.io/portfolio/lidar-app/).
 

@@ -18,7 +18,7 @@ url = "/images/portfolio/escape_02.jpg"
 alt = "escape02"
 +++
 
-In 2016, Google created an ephemeral escape game in Paris, named _Première Pièce_. SUPERBIEN was asked to create video content and interactive experiences for it. 
+In 2016, Google created an ephemeral escape game in Paris, named _Première Pièce_. SUPERBIEN was asked by [WE ARE SOCIAL](https://wearesocial.com/fr/) to create video content and interactive experiences for it. 
 
 Players had to go through several mini-riddles to finish the game, like searching for items in a high resolution painting that was controlled by their movements, or stepping at the right spot in the room to unlock new clues to carry on.
 

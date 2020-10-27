@@ -15,7 +15,7 @@ url = "/images/portfolio/audi_content.jpg"
 alt = "kids"
 +++
 
-In 2016, the Audi City store in Paris asked [SUPERBIEN](http://superbien.studio) to turn its window into a mini advent-calendar. To do so, we equiped the window with a LIDAR and invited people to defrost it to reveal Audi's cars.
+In 2016, the Audi City store in Paris asked [DOUBLE2](http://www.double2.fr/) and [SUPERBIEN](http://superbien.studio) to turn its window into a mini advent-calendar. To do so, we equiped the window with a LIDAR and invited people to defrost it to reveal Audi's cars.
 
 As a back-end developer, I was in charge of gathering data from the LIDAR and creating the architecture of the application.
 
