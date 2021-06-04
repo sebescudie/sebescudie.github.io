@@ -13,7 +13,7 @@ about:
   enable: true
   content: hello, i'm seb escudie, multimedia software developer from paris. for the last six years, i've  been developing interactive installations for the events business.
   button:
-    btnText: more detailz
+    btnText: more details
     URL: "/about"
 skill:
   enable: false
