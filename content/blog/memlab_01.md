@@ -294,7 +294,7 @@ F4FF64C8BAAC57D22F22EDC681055BA6
 
 Ok, maintenant essayons de décompresser notre archive avec ce mot de passe. Bingo ! On extrait bien l'image `flag3.png`, qui nous donne notre flag.
 
-![](/static/images/blog/memlab_01/memlab_flag3.png)
+![](https://raw.githubusercontent.com/sebescudie/sebescudie.github.io/master/static/images/blog/memlab_01/memlab_flag3.png)
 
 # mspaint - flag 2
 
@@ -302,7 +302,7 @@ La dernière chose à regarder est ce process `mspaint.exe`. Comme le disait la 
 
 Pour être tout à fait honnête, je n'ai rien fait d'autre que de chercher sur un moteur de recherche comment arriver à faire ça. J'ai essayé le plugin `screenshot` dont le résultat est assez drôle (on obtient un wireframe de toutes les fenêtres ouvertes!), mais ne nous aide pas à voir ce qui était dessiné dans Paint au moment du dump.
 
-![](/static/images/blog/memlab_01/memlab_screenshot_01.png)
+![](https://raw.githubusercontent.com/sebescudie/sebescudie.github.io/master/static/images/blog/memlab_01/memlab_screenshot_01.png)
 
 Après avoir donc lu [cet article de blog](https://w00tsec.blogspot.com/2015/02/extracting-raw-pictures-from-memory.html), je me lance.
 
@@ -319,17 +319,17 @@ Writing mspaint.exe [  2424] to 2424.dmp
 
 Ok, on continue. On renomme ce `2424.dmp` en `2424.data`, et on l'ouvre dans `GIMP` en tant que "Raw Image Data". Et après .. on joue avec les sliders. En essayant d'être attentif aux moments ou un pattern semble se repêter et en ajustant les valeurs plus finement quand ça arrive, on commence à tomber sur des choses sympa :
 
-![](/static/images/blog/memlab_01/memlab_raw_01.png)
+![](https://raw.githubusercontent.com/sebescudie/sebescudie.github.io/master/static/images/blog/memlab_01/memlab_raw_01.png)
 
 Incroyable de se dire que tout ça traine dans la RAM !
 
 J'ai gardé ces valeurs et ai continué à jouer sur l'offset pour à nouveau tomber sur quelque chose qui avait l'air intéressant :
 
-![](/static/images/blog/memlab_01/memlab_raw_02.png)
+![](https://raw.githubusercontent.com/sebescudie/sebescudie.github.io/master/static/images/blog/memlab_01/memlab_raw_02.png)
 
 Et en changeant encore un peu les valeurs de width, je tombe enfin sur :
 
-![](/static/images/blog/memlab_01/memlab_raw_03.png)
+![](https://raw.githubusercontent.com/sebescudie/sebescudie.github.io/master/static/images/blog/memlab_01/memlab_raw_03.png)
 
 Et boom ! Deuxième flag !
 
