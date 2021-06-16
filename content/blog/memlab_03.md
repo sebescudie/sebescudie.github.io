@@ -107,7 +107,7 @@ Volatility Foundation Volatility Framework 2.6.1
 
 Un fichier jpeg avec un nom marrant. Ca semble coller avec l'indication en début de CTF qui demandait d'installer `steghide`. On rapatrie donc le fichier sur notre disque dur, il s'agit d'une image shutterstock :
 
-![](https://raw.githubusercontent.com/sebescudie/sebescudie.github.io/master/static/images/blog/memlab_03/suspision1.jpg)
+![](https://raw.githubusercontent.com/sebescudie/sebescudie.github.io/master/static/images/blog/memlab_03/suspision1.jpeg)
 
 Ok, donc si essaye de passer l'image dans `steghide`, on nous demande un mot de passe :
 
