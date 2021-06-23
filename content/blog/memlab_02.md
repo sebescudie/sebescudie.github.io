@@ -31,7 +31,7 @@ INFO    : volatility.debug    : Determining profile based on KDBG search...
 
 Ok, `Win7SP1x64` it is.
 
-# CTRL+SHIFT+TAB
+# CTRL+SHIFT+ESC
 
 Regardons maintenant ce qui se passait sur la machine au moment du dump avec `pslist` :
 
