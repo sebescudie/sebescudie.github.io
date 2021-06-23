@@ -58,7 +58,7 @@ Session    WindowStation Format                         Handle Object           
          2 ------------- ------------------            0x100ff 0xfffff900c1acd390 
 ```
 
-Ok, je ne vois pas trop quoi faire de ces informations pour l'instant. En lisant [la doc de clipboard sur le repo de Volatility](https://github.com/volatilityfoundation/volatility/wiki/Command-Reference-Gui#clipboard), j'ai vu qu'ils mentionnaient le fait qu'on pouvait voir le path d'un fichier qui aurait été copié-collé avec la commande clipboard. Dans leur exemple, on peut voir qu'un fichier a été copié sur le bureau, ça ma donné l'idée de regarder si on ne trouvait pas quelque chose d'intéressant ici :
+Ok, je ne vois pas trop quoi faire de ces informations pour l'instant. En lisant [la doc de clipboard sur le repo de Volatility](https://github.com/volatilityfoundation/volatility/wiki/Command-Reference-Gui#clipboard), j'ai vu qu'ils mentionnaient le fait qu'on pouvait voir le path d'un fichier qui aurait été copié-collé avec la commande `clipboard`. Dans leur exemple, on peut voir qu'un fichier a été copié sur le bureau, ça m'a donné l'idée de regarder si on ne trouvait pas quelque chose d'intéressant ici :
 
 ```bash
 ┌──(kali㉿kali)-[~/Documents/ctf/MEMLABS]
