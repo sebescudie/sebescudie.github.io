@@ -1,0 +1,227 @@
+<!doctype html><style>html{height:100vh}body{min-height:100vh;display:grid;grid-template-rows:1fr auto}.footer{grid-row-start:2;grid-row-end:3}</style><html lang=en-us><head><meta charset=utf-8><title>sebescudie</title><meta name=viewport content="width=device-width,initial-scale=1"><meta name=description property="og:description" content="Writeup du cinquième lab MEMLABS"><meta name=image property="og:image" content="/"><meta name=author content="seb escudie"><meta name=generator content="Hugo 0.83.1"><link rel=stylesheet href=https://cdn.jsdelivr.net/npm/uikit@3.2.6/dist/css/uikit.min.css><link rel=stylesheet href=/css/style.min.css integrity media=screen><link rel=stylesheet href=/css/syntax.min.css integrity media=screen><script src=https://cdn.jsdelivr.net/npm/mailgo@0.9.14/dist/mailgo.min.js defer></script><link rel=apple-touch-icon sizes=180x180 href=/apple-touch-icon.png><link rel=icon type=image/png sizes=32x32 href=/favicon-32x32.png><link rel=icon type=image/png sizes=16x16 href=/favicon-16x16.png><link rel=manifest href=/site.webmanifest></head><body class=blog><div class=wrapper><div uk-sticky="sel-target: .uk-navbar-container; cls-active: uk-navbar-sticky; bottom: #transparent-sticky-navbar"><nav class="uk-navbar-container uk-margin" uk-navbar="mode: click;" style=padding-right:3rem><div class=uk-navbar-right><ul class="uk-navbar-nav uk-visible@s"><li><a style=font-size:18px;text-transform:none href=/>home</a></li><li><a style=font-size:18px;text-transform:none href=/about>about</a></li><li class=uk-active><a style=font-size:18px;text-transform:none href=/blog>blog</a></li><li><a style=font-size:18px;text-transform:none href=/contact>contact</a></li><li><a style=font-size:18px;text-transform:none href=/portfolio>portfolio</a></li></ul><a class="uk-navbar-toggle uk-hidden@s" uk-toggle="target: #sidenav" uk-navbar-toggle-icon href=#></a></div></nav></div><div id=sidenav uk-offcanvas="overlay: true"><div class="uk-offcanvas-bar uk-flex uk-flex-column"><ul class="uk-nav uk-nav-primary uk-nav-center uk-margin-auto-vertical"><li><a style=font-size:18px href>home</a></li><li><a style=font-size:18px href=/about>about</a></li><li class=uk-active><a style=font-size:18px href=/blog>blog</a></li><li><a style=font-size:18px href=/contact>contact</a></li><li><a style=font-size:18px href=/portfolio>portfolio</a></li></ul></div></div><style>p{margin:0}.people-wrap{display:inline-flex;margin-top:10px}.people-image{display:block;border-radius:50%}.people{margin-left:20px;margin-right:20px}.name{margin:auto}h1,h2,h3,h4,h5,h6{color:#000;font-family:Roboto,sans-serif;line-height:1.2;margin-top:2rem}.content img{box-shadow:0 4px 8px rgba(0,0,0,.2),0 6px 20px rgba(0,0,0,.19);display:block;margin-left:auto;margin-right:auto;margin-bottom:30px}.content video{box-shadow:0 4px 8px rgba(0,0,0,.2),0 6px 20px rgba(0,0,0,.19);display:block;margin:0 auto;max-width:60vw;max-height:60vh;margin-bottom:30px}iframe{display:block;margin-left:auto;margin-right:auto;margin-bottom:30px}p{margin-bottom:1em}body p:last-child{margin-bottom:0}img.skills{height:80px}@media only screen and (min-width:960px){.content img{max-width:60vw;max-height:60vh}.content img{max-width:60vw;max-height:60vh}}.content{width:90vw;max-width:1200px}table{font-family:arial,sans-serif;border-collapse:collapse;width:100%}td,th{border:1px solid #ddd;text-align:left;padding:8px}</style><section><div class="uk-container uk-margin-large-bottom uk-margin-medium-top"><h1 class="uk-text-center uk-heading-medium">MEMLABS - LAB05</h1><p class="uk-text-center uk-text-lead">Writeup du cinquième lab MEMLABS</p><hr class=full-width><div class=content><p>Cinquième writeup, cinquième challenge MEMLABS &mldr; allons-y pour l&rsquo;intro :</p><blockquote><p>We received this memory dump from our client recently. Someone accessed his system when he was not there and he found some rather strange files being accessed. Find those files and they might be useful. I quote his exact statement,</p><blockquote><p>The names were not readable. They were composed of alphabets and numbers but I wasn&rsquo;t able to make out what exactly it was.
+Also, he noticed his most loved application that he always used crashed every time he ran it. Was it a virus?</p></blockquote><ul><li><strong>Note-1:</strong> This challenge is composed of 3 flags. If you think 2nd flag is the end, it isn&rsquo;t!! :P</li><li><strong>Note-2:</strong> There was a small mistake when making this challenge. If you find any string which has the string &ldquo;L4B_3_D0n3!!&rdquo; in it, please change it to &ldquo;L4B_5_D0n3!!&rdquo; and then proceed.</li><li><strong>Note-3:</strong> You&rsquo;ll get the stage 2 flag only when you have the stage 1 flag.</li></ul></blockquote><h1 id=process>Process</h1><p>Comme d&rsquo;habitude, on commence par un <code>pslist</code>. J&rsquo;ai noté ici les process intéressants :</p><table><thead><tr><th>Process</th><th>PID</th><th>PPID</th></tr></thead><tbody><tr><td>WinRAR.exe</td><td>2924</td><td>1580</td></tr><tr><td>notepad.exe</td><td>2744</td><td>1580</td></tr><tr><td>NOTEPAD.EXE</td><td>2724</td><td>1580</td></tr><tr><td>WerFault.exe</td><td>2716</td><td>2632</td></tr><tr><td>NOTEPAD.EXE</td><td>1388</td><td>1580</td></tr><tr><td>WerFault.exe</td><td>780</td><td>2632</td></tr><tr><td>NOTEPAD.EXE</td><td>2056</td><td>1580</td></tr><tr><td>WerFault.exe</td><td>2168</td><td>2632</td></tr></tbody></table><p>Winrar, plusieurs instances du bloc-notes dont certaines en majuscule, et trois instances de <code>WerFault.exe</code>, qui est le process lancé par Windows quand une application crash. Ca fait déjà beaucoup de choses à analyser, allons-y pas à pas !</p><h1 id=werfault>WerFault</h1><p>Je n&rsquo;avais jamais vu le process WerFault avant, et après une petite recherche, je tombe sur <a href=https://helgeklein.com/blog/2021/03/anatomy-of-werfault-exe-application-crash-error-reporting/>cet article</a> qui nous explique tout ce qui se passe lorsque une application crash et que l&rsquo;OS lance WerFault. Visiblement, deux instances de WerFaut sont lancées, l&rsquo;une par <code>SYSTEM</code> et l&rsquo;autre par le process qui a crashé. On nous dit aussi que l&rsquo;instance lancée par le process ayant crashé est démarrée avec les arguments <code>-u</code> (user-mode) et <code>-p</code> pour le PID du process en question.</p><p>Faisons donc un <code>cmdlines</code> sur les WerFault pour y voir plus clair :</p><div class=highlight><pre style=color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4><code class=language-bash data-lang=bash>┌──<span style=color:#f92672>(</span>kali㉿kali<span style=color:#f92672>)</span>-<span style=color:#f92672>[</span>~/Documents/ctf/MEMLABS<span style=color:#f92672>]</span>
+└─$ python ~/volatility/volatility-2.6.1/vol.py -f MemoryDump_Lab5.raw --profile<span style=color:#f92672>=</span>Win7SP1x64 cmdline -p 2716,780,2168
+Volatility Foundation Volatility Framework 2.6.1
+************************************************************************
+WerFault.exe pid:   <span style=color:#ae81ff>2716</span>
+Command line : C:<span style=color:#ae81ff>\W</span>indows<span style=color:#ae81ff>\S</span>ysWOW64<span style=color:#ae81ff>\W</span>erFault.exe -u -p <span style=color:#ae81ff>2724</span> -s <span style=color:#ae81ff>156</span>
+************************************************************************
+WerFault.exe pid:    <span style=color:#ae81ff>780</span>
+Command line : C:<span style=color:#ae81ff>\W</span>indows<span style=color:#ae81ff>\S</span>ysWOW64<span style=color:#ae81ff>\W</span>erFault.exe -u -p <span style=color:#ae81ff>1388</span> -s <span style=color:#ae81ff>156</span>
+************************************************************************
+WerFault.exe pid:   <span style=color:#ae81ff>2168</span>
+</code></pre></div><p>Visiblement rien pour <code>2168</code>, en revanche <code>2716</code> et <code>780</code> on respectivement pour l&rsquo;argument <code>-p</code> <code>2724</code> et <code>1388</code>, soit les deux <code>NOTEPAD.EXE</code> chelou en majuscule. J&rsquo;ai l&rsquo;impression que cette version de <code>notepad</code> n&rsquo;est pas vraiment légitime, wait and see&mldr; En tout cas, j&rsquo;imagine qu&rsquo;on a trouvé la fameuse application qui crash au démarrage.</p><h1 id=notepad---premier-flag>Notepad - premier flag</h1><p>Très bien, regardons maintenant les process <code>notepad</code>. De la même manière, on va essayer de regarder avec quels arguments les instances ont été ouvertes :</p><div class=highlight><pre style=color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4><code class=language-bash data-lang=bash>┌──<span style=color:#f92672>(</span>kali㉿kali<span style=color:#f92672>)</span>-<span style=color:#f92672>[</span>~/Documents/ctf/MEMLABS<span style=color:#f92672>]</span>
+└─$ python ~/volatility/volatility-2.6.1/vol.py -f MemoryDump_Lab5.raw --profile<span style=color:#f92672>=</span>Win7SP1x64 cmdline -p 2744,2724,1388,2056
+Volatility Foundation Volatility Framework 2.6.1
+************************************************************************
+notepad.exe pid:   <span style=color:#ae81ff>2744</span>
+Command line : <span style=color:#e6db74>&#34;C:\Windows\system32\notepad.exe&#34;</span> 
+************************************************************************
+NOTEPAD.EXE pid:   <span style=color:#ae81ff>2724</span>
+Command line : <span style=color:#e6db74>&#34;C:\Users\SmartNet\Videos\NOTEPAD.EXE&#34;</span> 
+************************************************************************
+NOTEPAD.EXE pid:   <span style=color:#ae81ff>1388</span>
+************************************************************************
+NOTEPAD.EXE pid:   <span style=color:#ae81ff>2056</span>
+</code></pre></div><p>Tiens, le <code>NOTEPAD.EXE</code> chelou a été lancé depuis <code>C:\Users\SmartNet\Videos\</code>, à priori un exe n&rsquo;a rien à faire là-dedans ! Ca confirme bien l&rsquo;impression que ce process n&rsquo;est pas légitime, on va essayer de le dumper et de faire un strings dessus pour y voir plus clair :</p><div class=highlight><pre style=color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4><code class=language-bash data-lang=bash>┌──<span style=color:#f92672>(</span>kali㉿kali<span style=color:#f92672>)</span>-<span style=color:#f92672>[</span>~/Documents/ctf/MEMLABS<span style=color:#f92672>]</span>
+└─$ python ~/volatility/volatility-2.6.1/vol.py -f MemoryDump_Lab5.raw --profile<span style=color:#f92672>=</span>Win7SP1x64 procdump -p <span style=color:#ae81ff>2724</span> -D .
+Volatility Foundation Volatility Framework 2.6.1
+Process<span style=color:#f92672>(</span>V<span style=color:#f92672>)</span>         ImageBase          Name                 Result
+------------------ ------------------ -------------------- ------
+0xfffffa800108cb30 0x0000000001000000 NOTEPAD.EXE          OK: executable.2724.exe
+
+</code></pre></div><p>Ok, <code>strings</code> ne donne rien d&rsquo;intéressant, en revanche VirusTotal flag bien le fichier comme malicieux.</p><p>A ce stade, j&rsquo;ai essayé tout ce qui me passait par la tête : regarder les shellbags, la MFT, un <code>memdump</code> sur <code>NOTEPAD.EXE</code> malicieux, mais rien d&rsquo;intéressant.</p><p>J&rsquo;ai essayé le plugin <code>screenshot</code>, qui donne un wireframe des fenêtres ouvertes au moment du dump, et là quelque chose d&rsquo;intéressant est apparu : une fenêtre du photo viewer était ouverte, avec un nom de fichier à rallonge !</p><p><img src=https://raw.githubusercontent.com/sebescudie/sebescudie.github.io/master/static/images/blog/memlab_05/screenshot.png alt></p><p>Je suppose qu&rsquo;il s&rsquo;agit d&rsquo;une string en base64, et en commençant à la recopier dans Cyberchef, les premières lettres donnent l&rsquo;output <code>flag</code> &mldr; on est bien en présence d&rsquo;un flag !</p><p>Comme j&rsquo;avais la flemme de recopier la string à la main, j&rsquo;ai cherché les premiers caractères dans un dump de la MFT que j&rsquo;avais fait plus tôt, on trouve bien <code>ZmxhZ3shIV93M0xMX2QwbjNfU3Q0ZzMtMV8wZl9MNEJfM19EMG4zXyEhfQ</code>, ce qui dans Cyberchef nous donne <code>flag{!!_w3LL_d0n3_St4g3-1_0f_L4B_3_D0n3_!!}</code>. L&rsquo;intro disait qu&rsquo;il y avait une faute dans la string, on remplace donc <code>L4B_3</code> par <code>L4B_5</code>.</p><p>A ce stade, on ne sait toujours pas vraiment à quoi servait ce <code>NOTEPAD</code> vérolé, mais on a notre flag !</p><h1 id=winrar---second-flag>WinRAR - second flag</h1><p>Une fois encore, un <code>cmdline</code> pour voir ce qui s&rsquo;est passé côté Winrar :</p><div class=highlight><pre style=color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4><code class=language-bash data-lang=bash>┌──<span style=color:#f92672>(</span>kali㉿kali<span style=color:#f92672>)</span>-<span style=color:#f92672>[</span>~/Documents/ctf/MEMLABS<span style=color:#f92672>]</span>
+└─$ python ~/volatility/volatility-2.6.1/vol.py -f MemoryDump_Lab5.raw --profile<span style=color:#f92672>=</span>Win7SP1x64 cmdline -p <span style=color:#ae81ff>2924</span>
+Volatility Foundation Volatility Framework 2.6.1
+************************************************************************
+WinRAR.exe pid:   <span style=color:#ae81ff>2924</span>
+Command line : <span style=color:#e6db74>&#34;C:\Program Files\WinRAR\WinRAR.exe&#34;</span> <span style=color:#e6db74>&#34;C:\Users\SmartNet\Documents\SW1wb3J0YW50.rar&#34;</span>
+</code></pre></div><p>Tiens, un nom en apparence random, ça correspond avec ce que nous disait l&rsquo;intro. Essayons de le récupérer :</p><div class=highlight><pre style=color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4><code class=language-bash data-lang=bash>┌──<span style=color:#f92672>(</span>kali㉿kali<span style=color:#f92672>)</span>-<span style=color:#f92672>[</span>~/Documents/ctf/MEMLABS<span style=color:#f92672>]</span>
+└─$ python ~/volatility/volatility-2.6.1/vol.py -f MemoryDump_Lab5.raw --profile<span style=color:#f92672>=</span>Win7SP1x64 filescan | grep <span style=color:#e6db74>&#34;SW1wb3J0YW50&#34;</span>       
+Volatility Foundation Volatility Framework 2.6.1
+0x000000003eed56f0      <span style=color:#ae81ff>1</span>      <span style=color:#ae81ff>0</span> R--r-- <span style=color:#ae81ff>\D</span>evice<span style=color:#ae81ff>\H</span>arddiskVolume2<span style=color:#ae81ff>\U</span>sers<span style=color:#ae81ff>\S</span>martNet<span style=color:#ae81ff>\D</span>ocuments<span style=color:#ae81ff>\S</span>W1wb3J0YW50.rar
+                                                                                                                                         
+┌──<span style=color:#f92672>(</span>kali㉿kali<span style=color:#f92672>)</span>-<span style=color:#f92672>[</span>~/Documents/ctf/MEMLABS<span style=color:#f92672>]</span>
+└─$ python ~/volatility/volatility-2.6.1/vol.py -f MemoryDump_Lab5.raw --profile<span style=color:#f92672>=</span>Win7SP1x64 dumpfiles -Q 0x000000003eed56f0 -D .
+Volatility Foundation Volatility Framework 2.6.1
+DataSectionObject 0x3eed56f0   None   <span style=color:#ae81ff>\D</span>evice<span style=color:#ae81ff>\H</span>arddiskVolume2<span style=color:#ae81ff>\U</span>sers<span style=color:#ae81ff>\S</span>martNet<span style=color:#ae81ff>\D</span>ocuments<span style=color:#ae81ff>\S</span>W1wb3J0YW50.rar
+</code></pre></div><p>Ok, au moment de décompresser l&rsquo;archive, on voit qu&rsquo;elle contient un fichier qui s&rsquo;appelle <code>Stage2.png</code>, mais elle est bien sûr protégée par mot de passe. L&rsquo;intro disait qu&rsquo;il fallait nécessairement le premier flag pour trouver le second, on va donc l&rsquo;essayer comme mot de passe : ça fonctionne ! On obtient l&rsquo;image suivante :</p><p><img src=https://raw.githubusercontent.com/sebescudie/sebescudie.github.io/master/static/images/blog/memlab_05/stage2_flag.png alt></p><p>Ceci dit, l&rsquo;intro nous disait que le challenge était composé de trois flags &mldr;</p><h1 id=le-bloc-note-malicieux---dernier-flag>Le bloc note malicieux - dernier flag</h1><p>J&rsquo;ai pas envie de lâcher l&rsquo;affaire avec ce process. J&rsquo;ai commencé (mais jamais terminé &mldr;) <a href=https://tryhackme.com/room/introtox8664>une room</a> sur <a href=https://fr.wikipedia.org/wiki/Radare2>radare2</a> sur TryHackMe, on va donc voir si on peut désassembler le binaire&mldr;</p><p>Quelque commandes plus tard, on arrive ici :</p><div class=highlight><pre style=color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4><code class=language-bash data-lang=bash>┌──<span style=color:#f92672>(</span>kali㉿kali<span style=color:#f92672>)</span>-<span style=color:#f92672>[</span>~/Documents/ctf/MEMLABS/malicious_notepad_procdump<span style=color:#f92672>]</span>
+└─$ r2 NOTEPAD.EXE
+<span style=color:#f92672>[</span>0x0100739d<span style=color:#f92672>]</span>&gt; aa
+<span style=color:#f92672>[</span>x<span style=color:#f92672>]</span> Analyze all flags starting with sym. and entry0 <span style=color:#f92672>(</span>aa<span style=color:#f92672>)</span>
+<span style=color:#f92672>[</span>0x0100739d<span style=color:#f92672>]</span>&gt; afl
+0x0100739d   <span style=color:#ae81ff>15</span> <span style=color:#ae81ff>518</span>  -&gt; <span style=color:#ae81ff>463</span>  entry0
+0x010012b4    <span style=color:#ae81ff>5</span> <span style=color:#ae81ff>28</span>   -&gt; <span style=color:#ae81ff>31</span>   sym.imp.WINSPOOL.DRV_GetPrinterDriverW
+<span style=color:#f92672>[</span>0x0100739d<span style=color:#f92672>]</span>&gt; pdf @entry0
+            ;-- eip:
+┌ 463: entry0 <span style=color:#f92672>()</span>;
+│           ; var int32_t var_38h_2 @ ebp-0x38
+│           ; var int32_t var_34h_2 @ ebp-0x34
+│           ; var int32_t var_30h_2 @ ebp-0x30
+│           ; var int32_t var_2ch_2 @ ebp-0x2c
+│           ; var int32_t var_24h_2 @ ebp-0x24
+│           ; var int32_t var_20h_2 @ ebp-0x20
+│           ; var int32_t var_1ch_2 @ ebp-0x1c
+│           ; var int32_t var_18h @ ebp-0x18
+│           ; var int32_t var_bp_10h @ ebp-0x10
+│           ; var int32_t var_8h_2 @ ebp-0x8
+│           ; var int32_t var_4h_2 @ ebp-0x4
+│           ; var int32_t var_8h @ ebp+0x14
+│           ; var int32_t var_38h @ ebp+0x34
+│           ; var int32_t var_34h @ ebp+0x38
+│           ; var int32_t var_30h @ ebp+0x3c
+│           ; var int32_t var_2ch @ ebp+0x40
+│           ; var int32_t var_24h @ ebp+0x48
+│           ; var int32_t var_20h @ ebp+0x4c
+│           ; var int32_t var_1ch @ ebp+0x50
+│           ; var int32_t var_4h @ ebp+0x68
+│           ; var int32_t var_10h @ esp+0x20
+│           0x0100739d      6a70           push 0x70                   ; <span style=color:#e6db74>&#39;p&#39;</span> ; <span style=color:#ae81ff>112</span>
+│           0x0100739f      <span style=color:#ae81ff>6898180001</span>     push 0x1001898
+│           0x010073a4      e8bf010000     call 0x1007568
+│           0x010073a9      33db           xor ebx, ebx
+│           0x010073ab      <span style=color:#ae81ff>53</span>             push ebx
+│           0x010073ac      8b3dcc100001   mov edi, dword <span style=color:#f92672>[</span>sym.imp.KERNEL32.dll_GetModuleHandleA<span style=color:#f92672>]</span> ; <span style=color:#f92672>[</span>0x10010cc:4<span style=color:#f92672>]=</span>0x756a1245 reloc.KERNEL32.dll_GetModuleHandleA ; <span style=color:#e6db74>&#34;E\x12ju&#34;</span>
+│           0x010073b2      ffd7           call edi
+│           0x010073b4      6681384d5a     cmp word <span style=color:#f92672>[</span>eax<span style=color:#f92672>]</span>, 0x5a4d
+│       ┌─&lt; 0x010073b9      751f           jne 0x10073da
+│       │   0x010073bb      8b483c         mov ecx, dword <span style=color:#f92672>[</span>eax + 0x3c<span style=color:#f92672>]</span>
+│       │   0x010073be      03c8           add ecx, eax
+│       │   0x010073c0      <span style=color:#ae81ff>813950450000</span>   cmp dword <span style=color:#f92672>[</span>ecx<span style=color:#f92672>]</span>, 0x4550
+│      ┌──&lt; 0x010073c6      <span style=color:#ae81ff>7512</span>           jne 0x10073da
+│      ││   0x010073c8      0fb74118       movzx eax, word <span style=color:#f92672>[</span>ecx + 0x18<span style=color:#f92672>]</span>
+│      ││   0x010073cc      3d0b010000     cmp eax, 0x10b              ; <span style=color:#ae81ff>267</span>
+│     ┌───&lt; 0x010073d1      741f           je 0x10073f2
+│     │││   0x010073d3      3d0b020000     cmp eax, 0x20b              ; <span style=color:#ae81ff>523</span>
+│    ┌────&lt; 0x010073d8      <span style=color:#ae81ff>7405</span>           je 0x10073df
+│  ┌┌──└└─&gt; 0x010073da      895de4         mov dword <span style=color:#f92672>[</span>var_1ch<span style=color:#f92672>]</span>, ebx
+│  ╎╎││ ┌─&lt; 0x010073dd      eb27           jmp 0x1007406
+│  ╎╎└────&gt; 0x010073df      83b984000000.  cmp dword <span style=color:#f92672>[</span>ecx + 0x84<span style=color:#f92672>]</span>, 0xe
+│  └──────&lt; 0x010073e6      76f2           jbe 0x10073da
+│   ╎ │ │   0x010073e8      33c0           xor eax, eax
+│   ╎ │ │   0x010073ea      3999f8000000   cmp dword <span style=color:#f92672>[</span>ecx + 0xf8<span style=color:#f92672>]</span>, ebx
+│   ╎ │┌──&lt; 0x010073f0      eb0e           jmp 0x1007400
+│   ╎ └───&gt; 0x010073f2      8379740e       cmp dword <span style=color:#f92672>[</span>ecx + 0x74<span style=color:#f92672>]</span>, 0xe
+│   └─────&lt; 0x010073f6      76e2           jbe 0x10073da
+│      ││   0x010073f8      33c0           xor eax, eax
+│      ││   0x010073fa      3999e8000000   cmp dword <span style=color:#f92672>[</span>ecx + 0xe8<span style=color:#f92672>]</span>, ebx
+│      ││   ; CODE XREF from entry0 @ 0x10073f0
+│      └──&gt; 0x01007400      0f95c0         setne al
+│       │   0x01007403      8945e4         mov dword <span style=color:#f92672>[</span>var_1ch_2<span style=color:#f92672>]</span>, eax
+│       │   ; CODE XREF from entry0 @ 0x10073dd
+│       └─&gt; 0x01007406      895dfc         mov dword <span style=color:#f92672>[</span>var_4h<span style=color:#f92672>]</span>, ebx
+│           0x01007409      6a02           push <span style=color:#ae81ff>2</span>                      ; <span style=color:#ae81ff>2</span>
+│           0x0100740b      ff1538130001   call dword <span style=color:#f92672>[</span>sym.imp.msvcrt.dll___set_app_type<span style=color:#f92672>]</span> ; 0x1001338
+│           0x01007411      <span style=color:#ae81ff>59</span>             pop ecx
+│           0x01007412      830d9cab0001.  or dword <span style=color:#f92672>[</span>0x100ab9c<span style=color:#f92672>]</span>, 0xffffffff ; <span style=color:#f92672>[</span>0x100ab9c:4<span style=color:#f92672>]=</span><span style=color:#ae81ff>0</span>
+│           0x01007419      830da0ab0001.  or dword <span style=color:#f92672>[</span>0x100aba0<span style=color:#f92672>]</span>, 0xffffffff ; <span style=color:#f92672>[</span>0x100aba0:4<span style=color:#f92672>]=</span><span style=color:#ae81ff>0</span>
+│           0x01007420      ff1534130001   call dword <span style=color:#f92672>[</span>sym.imp.msvcrt.dll___p__fmode<span style=color:#f92672>]</span> ; 0x1001334
+│           0x01007426      8b0db89a0001   mov ecx, dword <span style=color:#f92672>[</span>0x1009ab8<span style=color:#f92672>]</span>  ; <span style=color:#f92672>[</span>0x1009ab8:4<span style=color:#f92672>]=</span><span style=color:#ae81ff>0</span>
+│           0x0100742c      <span style=color:#ae81ff>8908</span>           mov dword <span style=color:#f92672>[</span>eax<span style=color:#f92672>]</span>, ecx
+│           0x0100742e      ff1530130001   call dword <span style=color:#f92672>[</span>sym.imp.msvcrt.dll___p__commode<span style=color:#f92672>]</span> ; 0x1001330
+│           0x01007434      8b0db49a0001   mov ecx, dword <span style=color:#f92672>[</span>0x1009ab4<span style=color:#f92672>]</span>  ; <span style=color:#f92672>[</span>0x1009ab4:4<span style=color:#f92672>]=</span><span style=color:#ae81ff>0</span>
+│           0x0100743a      <span style=color:#ae81ff>8908</span>           mov dword <span style=color:#f92672>[</span>eax<span style=color:#f92672>]</span>, ecx
+│           0x0100743c      a12c130001     mov eax, dword <span style=color:#f92672>[</span>sym.imp.msvcrt.dll__adjust_fdiv<span style=color:#f92672>]</span> ; <span style=color:#f92672>[</span>0x100132c:4<span style=color:#f92672>]=</span>0x753732ec reloc.msvcrt.dll__adjust_fdiv
+│           0x01007441      8b00           mov eax, dword <span style=color:#f92672>[</span>eax<span style=color:#f92672>]</span>
+│           0x01007443      a3a4ab0001     mov dword <span style=color:#f92672>[</span>0x100aba4<span style=color:#f92672>]</span>, eax  ; <span style=color:#f92672>[</span>0x100aba4:4<span style=color:#f92672>]=</span><span style=color:#ae81ff>0</span>
+│           0x01007448      e8a7010000     call 0x10075f4
+│           0x0100744d      391d08960001   cmp dword <span style=color:#f92672>[</span>0x1009608<span style=color:#f92672>]</span>, ebx  ; <span style=color:#f92672>[</span>0x1009608:4<span style=color:#f92672>]=</span><span style=color:#ae81ff>1</span>
+│       ┌─&lt; 0x01007453      750c           jne 0x1007461
+│       │   0x01007455      68f4750001     push 0x10075f4
+│       │   0x0100745a      ff1528130001   call dword <span style=color:#f92672>[</span>sym.imp.msvcrt.dll___setusermatherr<span style=color:#f92672>]</span> ; 0x1001328
+│       │   0x01007460      <span style=color:#ae81ff>59</span>             pop ecx
+│       └─&gt; 0x01007461      e877010000     call 0x10075dd
+│           0x01007466      <span style=color:#ae81ff>6810900001</span>     push 0x1009010
+│           0x0100746b      680c900001     push 0x100900c
+│           0x01007470      e85d010000     call 0x10075d2
+│           0x01007475      a1b09a0001     mov eax, dword <span style=color:#f92672>[</span>0x1009ab0<span style=color:#f92672>]</span>  ; <span style=color:#f92672>[</span>0x1009ab0:4<span style=color:#f92672>]=</span><span style=color:#ae81ff>0</span>
+│           0x0100747a      8945dc         mov dword <span style=color:#f92672>[</span>var_24h<span style=color:#f92672>]</span>, eax
+│           0x0100747d      8d45dc         lea eax, <span style=color:#f92672>[</span>var_24h<span style=color:#f92672>]</span>
+│           0x01007480      <span style=color:#ae81ff>50</span>             push eax
+│           0x01007481      ff35ac9a0001   push dword <span style=color:#f92672>[</span>0x1009aac<span style=color:#f92672>]</span>
+│           0x01007487      8d45d4         lea eax, <span style=color:#f92672>[</span>var_2ch<span style=color:#f92672>]</span>
+│           0x0100748a      <span style=color:#ae81ff>50</span>             push eax
+│           0x0100748b      8d45d0         lea eax, <span style=color:#f92672>[</span>var_30h<span style=color:#f92672>]</span>
+│           0x0100748e      <span style=color:#ae81ff>50</span>             push eax
+│           0x0100748f      8d45cc         lea eax, <span style=color:#f92672>[</span>var_34h<span style=color:#f92672>]</span>
+│           0x01007492      <span style=color:#ae81ff>50</span>             push eax
+│           0x01007493      ff1520130001   call dword <span style=color:#f92672>[</span>sym.imp.msvcrt.dll___getmainargs<span style=color:#f92672>]</span> ; 0x1001320
+│           0x01007499      8945c8         mov dword <span style=color:#f92672>[</span>var_38h<span style=color:#f92672>]</span>, eax
+│           0x0100749c      <span style=color:#ae81ff>6808900001</span>     push 0x1009008
+│           0x010074a1      <span style=color:#ae81ff>6800900001</span>     push section..data          ; 0x1009000
+│           0x010074a6      e827010000     call 0x10075d2
+│           0x010074ab      83c424         add esp, 0x24
+│           0x010074ae      a11c130001     mov eax, dword <span style=color:#f92672>[</span>sym.imp.msvcrt.dll__acmdln<span style=color:#f92672>]</span> ; <span style=color:#f92672>[</span>0x100131c:4<span style=color:#f92672>]=</span>0x753704d8 reloc.msvcrt.dll__acmdln
+│           0x010074b3      8b30           mov esi, dword <span style=color:#f92672>[</span>eax<span style=color:#f92672>]</span>
+│           0x010074b5      8975e0         mov dword <span style=color:#f92672>[</span>var_20h<span style=color:#f92672>]</span>, esi
+│           0x010074b8      803e22         cmp byte <span style=color:#f92672>[</span>esi<span style=color:#f92672>]</span>, 0x22
+│           0x010074bb      b862000000     mov eax, 0x62               ; <span style=color:#e6db74>&#39;b&#39;</span> ; <span style=color:#ae81ff>98</span>
+│           0x010074c0      <span style=color:#ae81ff>50</span>             push eax
+│           0x010074c1      b869000000     mov eax, 0x69               ; <span style=color:#e6db74>&#39;i&#39;</span> ; <span style=color:#ae81ff>105</span>
+│           0x010074c6      <span style=color:#ae81ff>50</span>             push eax
+│           0x010074c7      b830000000     mov eax, 0x30               ; <span style=color:#e6db74>&#39;0&#39;</span> ; <span style=color:#ae81ff>48</span>
+│           0x010074cc      <span style=color:#ae81ff>50</span>             push eax
+│           0x010074cd      b873000000     mov eax, 0x73               ; <span style=color:#e6db74>&#39;s&#39;</span> ; <span style=color:#ae81ff>115</span>
+│           0x010074d2      <span style=color:#ae81ff>50</span>             push eax
+│           0x010074d3      bb7b000000     mov ebx, 0x7b               ; <span style=color:#e6db74>&#39;{&#39;</span> ; <span style=color:#ae81ff>123</span>
+│           0x010074d8      <span style=color:#ae81ff>53</span>             push ebx
+│           0x010074d9      b94d000000     mov ecx, 0x4d               ; <span style=color:#e6db74>&#39;M&#39;</span> ; <span style=color:#ae81ff>77</span>
+│           0x010074de      <span style=color:#ae81ff>51</span>             push ecx
+│           0x010074df      bb33000000     mov ebx, 0x33               ; <span style=color:#e6db74>&#39;3&#39;</span> ; <span style=color:#ae81ff>51</span>
+│           0x010074e4      <span style=color:#ae81ff>53</span>             push ebx
+│           0x010074e5      b86d000000     mov eax, 0x6d               ; <span style=color:#e6db74>&#39;m&#39;</span> ; <span style=color:#ae81ff>109</span>
+│           0x010074ea      <span style=color:#ae81ff>50</span>             push eax
+│           0x010074eb      b85f000000     mov eax, 0x5f               ; <span style=color:#e6db74>&#39;_&#39;</span> ; <span style=color:#ae81ff>95</span>
+│           0x010074f0      <span style=color:#ae81ff>50</span>             push eax
+│           0x010074f1      b86c000000     mov eax, 0x6c               ; <span style=color:#e6db74>&#39;l&#39;</span> ; <span style=color:#ae81ff>108</span>
+│           0x010074f6      <span style=color:#ae81ff>50</span>             push eax
+│           0x010074f7      b834000000     mov eax, 0x34               ; <span style=color:#e6db74>&#39;4&#39;</span> ; <span style=color:#ae81ff>52</span>
+│           0x010074fc      <span style=color:#ae81ff>50</span>             push eax
+│           0x010074fd      b842000000     mov eax, 0x42               ; <span style=color:#e6db74>&#39;B&#39;</span> ; <span style=color:#ae81ff>66</span>
+│           0x01007502      <span style=color:#ae81ff>50</span>             push eax
+│           0x01007503      b835000000     mov eax, 0x35               ; <span style=color:#e6db74>&#39;5&#39;</span> ; <span style=color:#ae81ff>53</span>
+│           0x01007508      <span style=color:#ae81ff>50</span>             push eax
+│           0x01007509      b85f000000     mov eax, 0x5f               ; <span style=color:#e6db74>&#39;_&#39;</span> ; <span style=color:#ae81ff>95</span>
+│           0x0100750e      <span style=color:#ae81ff>50</span>             push eax
+│           0x0100750f      b84f000000     mov eax, 0x4f               ; <span style=color:#e6db74>&#39;O&#39;</span> ; <span style=color:#ae81ff>79</span>
+│           0x01007514      <span style=color:#ae81ff>50</span>             push eax
+│           0x01007515      b856000000     mov eax, 0x56               ; <span style=color:#e6db74>&#39;V&#39;</span> ; <span style=color:#ae81ff>86</span>
+│           0x0100751a      <span style=color:#ae81ff>50</span>             push eax
+│           0x0100751b      b865000000     mov eax, 0x65               ; <span style=color:#e6db74>&#39;e&#39;</span> ; <span style=color:#ae81ff>101</span>
+│           0x01007520      <span style=color:#ae81ff>50</span>             push eax
+│           0x01007521      bb52000000     mov ebx, 0x52               ; <span style=color:#e6db74>&#39;R&#39;</span> ; <span style=color:#ae81ff>82</span>
+│           0x01007526      <span style=color:#ae81ff>53</span>             push ebx
+│           0x01007527      b85f000000     mov eax, 0x5f               ; <span style=color:#e6db74>&#39;_&#39;</span> ; <span style=color:#ae81ff>95</span>
+│           0x0100752c      <span style=color:#ae81ff>50</span>             push eax
+│           0x0100752d      b821000000     mov eax, 0x21               ; <span style=color:#e6db74>&#39;!&#39;</span> ; <span style=color:#ae81ff>33</span>
+│           0x01007532      <span style=color:#ae81ff>50</span>             push eax
+│           0x01007533      b87d000000     mov eax, 0x7d               ; <span style=color:#e6db74>&#39;}&#39;</span> ; <span style=color:#ae81ff>125</span>
+│           0x01007538      <span style=color:#ae81ff>50</span>             push eax
+│       ┌─&lt; 0x01007539      753a           jne 0x1007575
+│       │   0x0100753b      <span style=color:#ae81ff>59</span>             pop ecx
+│       │   0x0100753c      <span style=color:#ae81ff>59</span>             pop ecx
+│       │   0x0100753d      c3             ret
+..
+        │   ; CALL XREF from entry0 @ 0x10073a4
+│       └─&gt; 0x01007575      <span style=color:#ae81ff>44</span>             inc esp
+│           0x01007576      <span style=color:#ae81ff>2410</span>           and al, 0x10                ; <span style=color:#ae81ff>16</span>
+│           0x01007578      896c2410       mov dword <span style=color:#f92672>[</span>var_10h<span style=color:#f92672>]</span>, ebp
+│           0x0100757c      8d6c2410       lea ebp, <span style=color:#f92672>[</span>var_10h<span style=color:#f92672>]</span>
+│           0x01007580      2be0           sub esp, eax
+│           0x01007582      <span style=color:#ae81ff>53</span>             push ebx
+│           0x01007583      <span style=color:#ae81ff>56</span>             push esi
+│           0x01007584      <span style=color:#ae81ff>57</span>             push edi
+│           0x01007585      8b45f8         mov eax, dword <span style=color:#f92672>[</span>var_8h<span style=color:#f92672>]</span>
+│           0x01007588      8965e8         mov dword <span style=color:#f92672>[</span>var_18h<span style=color:#f92672>]</span>, esp
+│           0x0100758b      <span style=color:#ae81ff>50</span>             push eax
+│           0x0100758c      8b45fc         mov eax, dword <span style=color:#f92672>[</span>var_4h_2<span style=color:#f92672>]</span>
+│           0x0100758f      c745fcffffff.  mov dword <span style=color:#f92672>[</span>var_4h_2<span style=color:#f92672>]</span>, 0xffffffff ; -1
+│           0x01007596      8945f8         mov dword <span style=color:#f92672>[</span>var_8h_2<span style=color:#f92672>]</span>, eax
+│           0x01007599      8d45f0         lea eax, <span style=color:#f92672>[</span>var_bp_10h<span style=color:#f92672>]</span>
+│           0x0100759c      64a300000000   mov dword fs:<span style=color:#f92672>[</span>0<span style=color:#f92672>]</span>, eax
+└           0x010075a2      c3             ret
+<span style=color:#f92672>[</span>0x0100739d<span style=color:#f92672>]</span>&gt; 
+</code></pre></div><p>On dirait bien qu&rsquo;un flag se cache là-dedans !</p><p><code>bi0s{M3m_l4B5_0VeR_!}</code> est donc notre dernier flag !</p><h1 id=conclusion>Conclusion</h1><p>Lab intéressant, j&rsquo;ai pu apprendre pas mal de choses sur le fonctionnement de <code>WerFault</code>, et l&rsquo;aspect pseudo-RE de la fin était marrant ! Ceci-dit, je trouve les indications un peu contre-intuitives, on s&rsquo;atend à devoir chercher plusieurs fichiers, alors qu&rsquo;en fait il n&rsquo;en est rien.</p></div><div class=uk-padding-small></div><section><div class=content></div><div class=content></div></section></div></div></section></div><footer class=footer><div class=uk-container><div class="uk-grid-small uk-child-width-1-4@m uk-text-center uk-flex-center uk-margin-medium-bottom" uk-grid><div class=uk-margin-small-bottom><h5 class=uk-margin-small-bottom>Email</h5><a href=mailto:ping%20%7bat%7d%20sebescudie.fr>ping {at} sebescudie.fr</a></div><div><h5 class=uk-margin-small-bottom>Address</h5><div uk-lightbox><a href="https://www.openstreetmap.org/#map=15/48.8283/2.3695" data-caption="paris, fr" data-type=iframe>paris, fr</a></div></div></div><div class="footer-copyright uk-text-center" style=padding-bottom:1rem><img loading=lazy src=https://mirrors.creativecommons.org/presskit/icons/cc.svg style=height:1.2em;width:1.2em alt="Creative Commons">
+<img loading=lazy src=https://mirrors.creativecommons.org/presskit/icons/by.svg style=height:1.2em;width:1.2em alt=CC-BY>
+2020
+seb escudie</div></footer><script src=https://cdn.jsdelivr.net/npm/uikit@3.2.6/dist/js/uikit.min.js></script><script src=https://cdn.jsdelivr.net/npm/uikit@3.2.6/dist/js/uikit-icons.min.js></script></body></html>
