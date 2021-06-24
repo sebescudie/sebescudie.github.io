@@ -10,20 +10,28 @@ Encore un writeup, encore MEMLABS, pour le quatrième challenge cette fois-ci. C
 
 > My system was recently compromised. The Hacker stole a lot of information but he also deleted a very important file of mine. I have no idea on how to recover it. The only evidence we have, at this point of time is this memory dump. Please help me.
 
-Ok, donc il va sûrement falloir rechercher un fichier supprimé. C'est parti !
+Visiblement, il va falloir rechercher un fichier supprimé ... c'est parti !
+
+#  Process
 
 Histoire de se simplifier la vie, on va sauvegarder le résultat de `pslist` dans un fichier texte pour pouvoir s'y référer plus facilement. Voilà ce que j'ai noté d'intéressant :
 
-StikyNot.exe           2432
-GoogleCrashHan         2272
-GoogleCrashHan         2284
+| Process        | PID  |
+| -------------- | ---- |
+| StickyNot.exe  | 2438 |
+| GoogleCrashHan | 2272 |
+| GoogleCrashHan | 2248 |
 
-Visiblement, on a le widget Sticky Notes d'ouvert. J'ai déjà vu dans un autre CTF des informations intéressantes (--> des mots de passe) notés là-dedans. Le contenu des notes est stocké quelque part sur l'ordi, on ira donc voir ce qui s'y cache !
+Visiblement, on a le widget Sticky Notes d'ouvert. J'ai déjà vu dans un autre CTF des informations intéressantes (--> des mots de passe) notés là-dedans. Le contenu des notes est stocké quelque part dans le système de fichiers, on ira donc voir ce qui s'y cache !
 Aussi, deux process GoogleCrashHandler. Est-ce qu'un Chrome aurait planté ? On va regarder ça aussi.
 
 # Sticky notes
 
-Selon [cet article](https://www.pcworld.com/article/2090765/where-sticky-notes-are-stored-and-how-you-can-recover-them.html) de PCWorld, "Windows stores your sticky notes in a special appdata folder, which is probably C:\Users\logon\AppData\Roaming\Microsoft\Sticky Notes—with logon being the name with which you log onto your PC. You’ll find only one file in that folder, StickyNotes.snt, which contains all your notes". Ok, essayons de chercher ce fichier :
+Selon [cet article](https://www.pcworld.com/article/2090765/where-sticky-notes-are-stored-and-how-you-can-recover-them.html) de PCWorld : 
+
+> Windows stores your sticky notes in a special appdata folder, which is probably C:\Users\logon\AppData\Roaming\Microsoft\Sticky Notes—with logon being the name with which you log onto your PC. You’ll find only one file in that folder, StickyNotes.snt, which contains all your notes". 
+
+Ok, essayons de chercher ce fichier :
 
 ```bash
 ┌──(kali㉿kali)-[~/Documents/ctf/MEMLABS]
@@ -69,17 +77,28 @@ Volatility Foundation Volatility Framework 2.6.1
 0x000000003fc398d0     16      0 R--rw- \Device\HarddiskVolume2\Users\SlimShady\Desktop\Important.txt
 ```
 
-En effet, y'a du monde (j'ai supprimé les lignes qui n'étaient pas intéressantes, genre `Desktop.ini`) ! Note pour plus tard : toujours regarder ce qui se trouve sur le bureau dans un CTF :)
+En effet, y'a du monde (j'ai supprimé les lignes qui n'étaient pas intéressantes) ! Note pour plus tard : toujours regarder ce qui se trouve sur le bureau dans un CTF :)
 
-J'ai bien réussi à dumper les deux images (`galf.jpeg` et `Screenshot1.png`). En revanche, rien ne se passe lorsque j'essaye de dumper `Important.txt`. Après une petite recherche, j'apprends dans [cette issue](https://github.com/volatilityfoundation/volatility/issues/588) que "its possible the file's content isn't cached anymore by the cache manager (its likely to get removed after the process closes the file handle). That doesn't mean the file's content is entirely wiped out of RAM however...it could just mean the association between the file object and the file data is broken (i.e. pointers).". Peut-être qu'il s'agit de notre fichier supprimé ? Gardons ça sous le coude pour plus tard.
+J'ai bien réussi à dumper les deux images (`galf.jpeg` et `Screenshot1.png`). En revanche, rien ne se passe lorsque j'essaye de dumper `Important.txt`. Après une petite recherche, j'apprends dans [cette issue](https://github.com/volatilityfoundation/volatility/issues/588) que 
 
-Je commence par faire un `steghide` sur l'image `galf.jpeg`, et à nouveau, ça troll : on obtient un fichier `LMAO.txt` avec le contenu suivant : `Move on bro, there is nothing here :)`. SUPER. L'autre fichier, `Screenshot1.png`, est juste un screenshot de Google. Rien ne semble caché dedans, steganographiquement parlant.
+> "its possible the file's content isn't cached anymore by the cache manager (its likely to get removed after the process closes the file handle). That doesn't mean the file's content is entirely wiped out of RAM however...it could just mean the association between the file object and the file data is broken (i.e. pointers).". 
+
+Peut-être qu'il s'agit de notre fichier supprimé ? Gardons ça sous le coude pour plus tard.
+
+Je commence par faire un `steghide` sur l'image `galf.jpeg`, et à nouveau, ça troll : on obtient un fichier `LMAO.txt` avec le contenu suivant : 
+
+```
+Move on bro, there is nothing here :). 
+```
+Super.
+
+L'autre fichier, `Screenshot1.png`, est juste un screenshot de Google. Rien ne semble caché dedans, steganographiquement parlant.
 
 J'ai par la suite essayé les plugins permettant d'extraire des artefacts de Chrome, mais sans succès.
 
-# Fichier supprimé - Le flag
+# Fichier supprimé : le flag
 
-Bon, au final on diverge beaucoup mais on trouve pas grand chose. Je décide donc de faire un tour sur internet pour chercher comment recover un fichier supprimé via volatility. Et là, je tombe sur un writeup d'un autre CTF créé par stuxn3t, où il est également question de recover un fichier nommé `Important.txt`. Et là, la réponse tombe toute cuite, il suffit d'utiliser le plugin `mftparser` pour récupérer la Master File Table et avoir accès au fichier, a condition qu'il n'ait pas été override.
+Bon, au final on diverge beaucoup mais on trouve pas grand chose. Je décide donc de faire un tour sur internet pour chercher comment recover un fichier supprimé via volatility. Et là, je tombe sur un writeup d'un autre CTF créé par stuxn3t, où il est également question de recover un fichier nommé `Important.txt`. Et là, la réponse tombe toute cuite, il suffit d'utiliser le plugin `mftparser` pour afficher la Master File Table et avoir accès au fichier, a condition qu'il n'ait pas été override.
 
 Et là, sans surprise, si on envoie le résultat de la commande dans in fichier texte, on obtient :
 
@@ -128,7 +147,7 @@ Le contenu de `$DATA` semble bien être un flag : `ctf{1_is_n0t_EQu4l_7o_2_bUt_t
 
 Alors bon, je n'avais pas connaissance de ce plugin-là, ni-même de la MFT en soi, on va donc faire de petites recherches sur le sujet histoire de ramener quelque chose de ce CTF :)
 
-# Was ist das
+# Was ist MFT ?
 
 On commence donc par lire [la doc Microsoft sur la MFT](https://docs.microsoft.com/en-us/windows/win32/fileio/master-file-table). Elle nous dit que 
 
@@ -141,4 +160,6 @@ Aussi, je suis tombé sur [un fil Reddit plutôt intéressant](https://www.reddi
 
 # Conclusion
 
-J'aurais peut-être pu chercher à recover le fichier supprimé dès le début, mais le fait de tâtonner m'a donné l'occasion de me pencher sur les Sticky Notes qui peuvent être un artefact intéressant, et aussi de me souvenir de toujours faire un tour sur le Bureau pour trouver des choses intéressantes ! Aussi, j'ai pu apprendre les bases du fonctionnement de la MFT, et tester `mftparser` qui pourra je pense s'avérer vachement pratique dans de futurs CTF !
+J'aurais peut-être pu chercher à recover le fichier supprimé dès le début, mais le fait de tâtonner m'a donné l'occasion de me pencher sur les Sticky Notes qui peuvent être un artefact intéressant, et aussi de me souvenir de toujours faire un tour sur le Bureau pour trouver des choses (parfois) pertinentes !
+
+Aussi, j'ai pu apprendre les bases du fonctionnement de la MFT, et tester `mftparser` qui pourra je pense s'avérer vachement pratique dans de futurs CTF.
