@@ -1,5 +1,126 @@
-<!doctype html><style>html{height:100vh}body{min-height:100vh;display:grid;grid-template-rows:1fr auto}.footer{grid-row-start:2;grid-row-end:3}</style><html lang=en-us><head><meta charset=utf-8><title>sebescudie</title><meta name=viewport content="width=device-width,initial-scale=1"><meta name=description property="og:description" content="Writeup du cinquième lab MEMLABS"><meta name=image property="og:image" content="/"><meta name=author content="seb escudie"><meta name=generator content="Hugo 0.83.1"><link rel=stylesheet href=https://cdn.jsdelivr.net/npm/uikit@3.2.6/dist/css/uikit.min.css><link rel=stylesheet href=/css/style.min.css integrity media=screen><link rel=stylesheet href=/css/syntax.min.css integrity media=screen><script src=https://cdn.jsdelivr.net/npm/mailgo@0.9.14/dist/mailgo.min.js defer></script><link rel=apple-touch-icon sizes=180x180 href=/apple-touch-icon.png><link rel=icon type=image/png sizes=32x32 href=/favicon-32x32.png><link rel=icon type=image/png sizes=16x16 href=/favicon-16x16.png><link rel=manifest href=/site.webmanifest></head><body class=blog><div class=wrapper><div uk-sticky="sel-target: .uk-navbar-container; cls-active: uk-navbar-sticky; bottom: #transparent-sticky-navbar"><nav class="uk-navbar-container uk-margin" uk-navbar="mode: click;" style=padding-right:3rem><div class=uk-navbar-right><ul class="uk-navbar-nav uk-visible@s"><li><a style=font-size:18px;text-transform:none href=/>home</a></li><li><a style=font-size:18px;text-transform:none href=/about>about</a></li><li class=uk-active><a style=font-size:18px;text-transform:none href=/blog>blog</a></li><li><a style=font-size:18px;text-transform:none href=/contact>contact</a></li><li><a style=font-size:18px;text-transform:none href=/portfolio>portfolio</a></li></ul><a class="uk-navbar-toggle uk-hidden@s" uk-toggle="target: #sidenav" uk-navbar-toggle-icon href=#></a></div></nav></div><div id=sidenav uk-offcanvas="overlay: true"><div class="uk-offcanvas-bar uk-flex uk-flex-column"><ul class="uk-nav uk-nav-primary uk-nav-center uk-margin-auto-vertical"><li><a style=font-size:18px href>home</a></li><li><a style=font-size:18px href=/about>about</a></li><li class=uk-active><a style=font-size:18px href=/blog>blog</a></li><li><a style=font-size:18px href=/contact>contact</a></li><li><a style=font-size:18px href=/portfolio>portfolio</a></li></ul></div></div><style>p{margin:0}.people-wrap{display:inline-flex;margin-top:10px}.people-image{display:block;border-radius:50%}.people{margin-left:20px;margin-right:20px}.name{margin:auto}h1,h2,h3,h4,h5,h6{color:#000;font-family:Roboto,sans-serif;line-height:1.2;margin-top:2rem}.content img{box-shadow:0 4px 8px rgba(0,0,0,.2),0 6px 20px rgba(0,0,0,.19);display:block;margin-left:auto;margin-right:auto;margin-bottom:30px}.content video{box-shadow:0 4px 8px rgba(0,0,0,.2),0 6px 20px rgba(0,0,0,.19);display:block;margin:0 auto;max-width:60vw;max-height:60vh;margin-bottom:30px}iframe{display:block;margin-left:auto;margin-right:auto;margin-bottom:30px}p{margin-bottom:1em}body p:last-child{margin-bottom:0}img.skills{height:80px}@media only screen and (min-width:960px){.content img{max-width:60vw;max-height:60vh}.content img{max-width:60vw;max-height:60vh}}.content{width:90vw;max-width:1200px}table{font-family:arial,sans-serif;border-collapse:collapse;width:100%}td,th{border:1px solid #ddd;text-align:left;padding:8px}</style><section><div class="uk-container uk-margin-large-bottom uk-margin-medium-top"><h1 class="uk-text-center uk-heading-medium">MEMLABS - LAB05</h1><p class="uk-text-center uk-text-lead">Writeup du cinquième lab MEMLABS</p><hr class=full-width><div class=content><p>Cinquième writeup, cinquième challenge MEMLABS &mldr; allons-y pour l&rsquo;intro :</p><blockquote><p>We received this memory dump from our client recently. Someone accessed his system when he was not there and he found some rather strange files being accessed. Find those files and they might be useful. I quote his exact statement,</p><blockquote><p>The names were not readable. They were composed of alphabets and numbers but I wasn&rsquo;t able to make out what exactly it was.
-Also, he noticed his most loved application that he always used crashed every time he ran it. Was it a virus?</p></blockquote><ul><li><strong>Note-1:</strong> This challenge is composed of 3 flags. If you think 2nd flag is the end, it isn&rsquo;t!! :P</li><li><strong>Note-2:</strong> There was a small mistake when making this challenge. If you find any string which has the string &ldquo;L4B_3_D0n3!!&rdquo; in it, please change it to &ldquo;L4B_5_D0n3!!&rdquo; and then proceed.</li><li><strong>Note-3:</strong> You&rsquo;ll get the stage 2 flag only when you have the stage 1 flag.</li></ul></blockquote><h1 id=process>Process</h1><p>Comme d&rsquo;habitude, on commence par un <code>pslist</code>. J&rsquo;ai noté ici les process intéressants :</p><table><thead><tr><th>Process</th><th>PID</th><th>PPID</th></tr></thead><tbody><tr><td>WinRAR.exe</td><td>2924</td><td>1580</td></tr><tr><td>notepad.exe</td><td>2744</td><td>1580</td></tr><tr><td>NOTEPAD.EXE</td><td>2724</td><td>1580</td></tr><tr><td>WerFault.exe</td><td>2716</td><td>2632</td></tr><tr><td>NOTEPAD.EXE</td><td>1388</td><td>1580</td></tr><tr><td>WerFault.exe</td><td>780</td><td>2632</td></tr><tr><td>NOTEPAD.EXE</td><td>2056</td><td>1580</td></tr><tr><td>WerFault.exe</td><td>2168</td><td>2632</td></tr></tbody></table><p>Winrar, plusieurs instances du bloc-notes dont certaines en majuscule, et trois instances de <code>WerFault.exe</code>, qui est le process lancé par Windows quand une application crash. Ca fait déjà beaucoup de choses à analyser, allons-y pas à pas !</p><h1 id=werfault>WerFault</h1><p>Je n&rsquo;avais jamais vu le process WerFault avant, et après une petite recherche, je tombe sur <a href=https://helgeklein.com/blog/2021/03/anatomy-of-werfault-exe-application-crash-error-reporting/>cet article</a> qui nous explique tout ce qui se passe lorsque une application crash et que l&rsquo;OS lance WerFault. Visiblement, deux instances de WerFaut sont lancées, l&rsquo;une par <code>SYSTEM</code> et l&rsquo;autre par le process qui a crashé. On nous dit aussi que l&rsquo;instance lancée par le process ayant crashé est démarrée avec les arguments <code>-u</code> (user-mode) et <code>-p</code> pour le PID du process en question.</p><p>Faisons donc un <code>cmdlines</code> sur les WerFault pour y voir plus clair :</p><div class=highlight><pre style=color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4><code class=language-bash data-lang=bash>┌──<span style=color:#f92672>(</span>kali㉿kali<span style=color:#f92672>)</span>-<span style=color:#f92672>[</span>~/Documents/ctf/MEMLABS<span style=color:#f92672>]</span>
+<!doctype html><style>html{height:100vh}body{min-height:100vh;display:grid;grid-template-rows:1fr auto}.footer{grid-row-start:2;grid-row-end:3}</style>
+<html lang=en-us><head>
+<meta charset=utf-8>
+<title>sebescudie</title>
+<meta name=viewport content="width=device-width,initial-scale=1">
+<meta name=description property="og:description" content="Writeup du cinquième lab MEMLABS">
+<meta name=image property="og:image" content="/">
+<meta name=author content="seb escudie">
+<meta name=generator content="Hugo 0.88.1">
+<link rel=stylesheet href=https://cdn.jsdelivr.net/npm/uikit@3.2.6/dist/css/uikit.min.css>
+<link rel=stylesheet href=/css/style.min.css integrity media=screen>
+<link rel=stylesheet href=/css/syntax.min.css integrity media=screen>
+<script src=https://cdn.jsdelivr.net/npm/mailgo@0.9.14/dist/mailgo.min.js defer></script>
+<link rel=apple-touch-icon sizes=180x180 href=/apple-touch-icon.png>
+<link rel=icon type=image/png sizes=32x32 href=/favicon-32x32.png>
+<link rel=icon type=image/png sizes=16x16 href=/favicon-16x16.png>
+<link rel=manifest href=/site.webmanifest>
+</head>
+<body class=blog>
+<div class=wrapper><div uk-sticky="sel-target: .uk-navbar-container; cls-active: uk-navbar-sticky; bottom: #transparent-sticky-navbar">
+<nav class="uk-navbar-container uk-margin" uk-navbar="mode: click;" style=padding-right:3rem>
+<div class=uk-navbar-right>
+<ul class="uk-navbar-nav uk-visible@s">
+<li><a style=font-size:18px;text-transform:none href=/> home
+</a></li>
+<li><a style=font-size:18px;text-transform:none href=/about>about</a></li>
+<li class=uk-active><a style=font-size:18px;text-transform:none href=/blog>blog</a></li>
+<li><a style=font-size:18px;text-transform:none href=/contact>contact</a></li>
+<li><a style=font-size:18px;text-transform:none href=/portfolio>portfolio</a></li>
+</ul>
+<a class="uk-navbar-toggle uk-hidden@s" uk-toggle="target: #sidenav" uk-navbar-toggle-icon href=#></a>
+</div>
+</nav>
+</div>
+<div id=sidenav uk-offcanvas="overlay: true">
+<div class="uk-offcanvas-bar uk-flex uk-flex-column">
+<ul class="uk-nav uk-nav-primary uk-nav-center uk-margin-auto-vertical">
+<li><a style=font-size:18px href> home </a></li>
+<li><a style=font-size:18px href=/about>about</a></li>
+<li class=uk-active><a style=font-size:18px href=/blog>blog</a></li>
+<li><a style=font-size:18px href=/contact>contact</a></li>
+<li><a style=font-size:18px href=/portfolio>portfolio</a></li>
+</ul>
+</div>
+</div>
+<style>p{margin:0}.people-wrap{display:inline-flex;margin-top:10px}.people-image{display:block;border-radius:50%}.people{margin-left:20px;margin-right:20px}.name{margin:auto}h1,h2,h3,h4,h5,h6{color:#000;font-family:Roboto,sans-serif;line-height:1.2;margin-top:2rem}.content img{box-shadow:0 4px 8px rgba(0,0,0,.2),0 6px 20px rgba(0,0,0,.19);display:block;margin-left:auto;margin-right:auto;margin-bottom:30px}.content video{box-shadow:0 4px 8px rgba(0,0,0,.2),0 6px 20px rgba(0,0,0,.19);display:block;margin:0 auto;max-width:60vw;max-height:60vh;margin-bottom:30px}iframe{display:block;margin-left:auto;margin-right:auto;margin-bottom:30px}p{margin-bottom:1em}body p:last-child{margin-bottom:0}img.skills{height:80px}@media only screen and (min-width:960px){.content img{max-width:60vw;max-height:60vh}.content img{max-width:60vw;max-height:60vh}}.content{width:90vw;max-width:1200px}table{font-family:arial,sans-serif;border-collapse:collapse;width:100%}td,th{border:1px solid #ddd;text-align:left;padding:8px}</style>
+<section>
+<div class="uk-container uk-margin-large-bottom uk-margin-medium-top">
+<h1 class="uk-text-center uk-heading-medium">MEMLABS - LAB05</h1>
+<p class="uk-text-center uk-text-lead">Writeup du cinquième lab MEMLABS</p>
+<hr class=full-width>
+<div class=content>
+<p>Cinquième writeup, cinquième challenge MEMLABS &mldr; allons-y pour l&rsquo;intro :</p>
+<blockquote>
+<p>We received this memory dump from our client recently. Someone accessed his system when he was not there and he found some rather strange files being accessed. Find those files and they might be useful. I quote his exact statement,</p>
+<blockquote>
+<p>The names were not readable. They were composed of alphabets and numbers but I wasn&rsquo;t able to make out what exactly it was.
+Also, he noticed his most loved application that he always used crashed every time he ran it. Was it a virus?</p>
+</blockquote>
+<ul>
+<li><strong>Note-1:</strong> This challenge is composed of 3 flags. If you think 2nd flag is the end, it isn&rsquo;t!! :P</li>
+<li><strong>Note-2:</strong> There was a small mistake when making this challenge. If you find any string which has the string &ldquo;L4B_3_D0n3!!&rdquo; in it, please change it to &ldquo;L4B_5_D0n3!!&rdquo; and then proceed.</li>
+<li><strong>Note-3:</strong> You&rsquo;ll get the stage 2 flag only when you have the stage 1 flag.</li>
+</ul>
+</blockquote>
+<h1 id=process>Process</h1>
+<p>Comme d&rsquo;habitude, on commence par un <code>pslist</code>. J&rsquo;ai noté ici les process intéressants :</p>
+<table>
+<thead>
+<tr>
+<th>Process</th>
+<th>PID</th>
+<th>PPID</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>WinRAR.exe</td>
+<td>2924</td>
+<td>1580</td>
+</tr>
+<tr>
+<td>notepad.exe</td>
+<td>2744</td>
+<td>1580</td>
+</tr>
+<tr>
+<td>NOTEPAD.EXE</td>
+<td>2724</td>
+<td>1580</td>
+</tr>
+<tr>
+<td>WerFault.exe</td>
+<td>2716</td>
+<td>2632</td>
+</tr>
+<tr>
+<td>NOTEPAD.EXE</td>
+<td>1388</td>
+<td>1580</td>
+</tr>
+<tr>
+<td>WerFault.exe</td>
+<td>780</td>
+<td>2632</td>
+</tr>
+<tr>
+<td>NOTEPAD.EXE</td>
+<td>2056</td>
+<td>1580</td>
+</tr>
+<tr>
+<td>WerFault.exe</td>
+<td>2168</td>
+<td>2632</td>
+</tr>
+</tbody>
+</table>
+<p>Winrar, plusieurs instances du bloc-notes dont certaines en majuscule, et trois instances de <code>WerFault.exe</code>, qui est le process lancé par Windows quand une application crash. Ca fait déjà beaucoup de choses à analyser, allons-y pas à pas !</p>
+<h1 id=werfault>WerFault</h1>
+<p>Je n&rsquo;avais jamais vu le process WerFault avant, et après une petite recherche, je tombe sur <a href=https://helgeklein.com/blog/2021/03/anatomy-of-werfault-exe-application-crash-error-reporting/>cet article</a> qui nous explique tout ce qui se passe lorsque une application crash et que l&rsquo;OS lance WerFault. Visiblement, deux instances de WerFaut sont lancées, l&rsquo;une par <code>SYSTEM</code> et l&rsquo;autre par le process qui a crashé. On nous dit aussi que l&rsquo;instance lancée par le process ayant crashé est démarrée avec les arguments <code>-u</code> (user-mode) et <code>-p</code> pour le PID du process en question.</p>
+<p>Faisons donc un <code>cmdlines</code> sur les WerFault pour y voir plus clair :</p>
+<div class=highlight><pre tabindex=0 style=color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4><code class=language-bash data-lang=bash>┌──<span style=color:#f92672>(</span>kali㉿kali<span style=color:#f92672>)</span>-<span style=color:#f92672>[</span>~/Documents/ctf/MEMLABS<span style=color:#f92672>]</span>
 └─$ python ~/volatility/volatility-2.6.1/vol.py -f MemoryDump_Lab5.raw --profile<span style=color:#f92672>=</span>Win7SP1x64 cmdline -p 2716,780,2168
 Volatility Foundation Volatility Framework 2.6.1
 ************************************************************************
@@ -10,7 +131,10 @@ WerFault.exe pid:    <span style=color:#ae81ff>780</span>
 Command line : C:<span style=color:#ae81ff>\W</span>indows<span style=color:#ae81ff>\S</span>ysWOW64<span style=color:#ae81ff>\W</span>erFault.exe -u -p <span style=color:#ae81ff>1388</span> -s <span style=color:#ae81ff>156</span>
 ************************************************************************
 WerFault.exe pid:   <span style=color:#ae81ff>2168</span>
-</code></pre></div><p>Visiblement rien pour <code>2168</code>, en revanche <code>2716</code> et <code>780</code> on respectivement pour l&rsquo;argument <code>-p</code> <code>2724</code> et <code>1388</code>, soit les deux <code>NOTEPAD.EXE</code> chelou en majuscule. J&rsquo;ai l&rsquo;impression que cette version de <code>notepad</code> n&rsquo;est pas vraiment légitime, wait and see&mldr; En tout cas, j&rsquo;imagine qu&rsquo;on a trouvé la fameuse application qui crash au démarrage.</p><h1 id=notepad---premier-flag>Notepad - premier flag</h1><p>Très bien, regardons maintenant les process <code>notepad</code>. De la même manière, on va essayer de regarder avec quels arguments les instances ont été ouvertes :</p><div class=highlight><pre style=color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4><code class=language-bash data-lang=bash>┌──<span style=color:#f92672>(</span>kali㉿kali<span style=color:#f92672>)</span>-<span style=color:#f92672>[</span>~/Documents/ctf/MEMLABS<span style=color:#f92672>]</span>
+</code></pre></div><p>Visiblement rien pour <code>2168</code>, en revanche <code>2716</code> et <code>780</code> on respectivement pour l&rsquo;argument <code>-p</code> <code>2724</code> et <code>1388</code>, soit les deux <code>NOTEPAD.EXE</code> chelou en majuscule. J&rsquo;ai l&rsquo;impression que cette version de <code>notepad</code> n&rsquo;est pas vraiment légitime, wait and see&mldr; En tout cas, j&rsquo;imagine qu&rsquo;on a trouvé la fameuse application qui crash au démarrage.</p>
+<h1 id=notepad---premier-flag>Notepad - premier flag</h1>
+<p>Très bien, regardons maintenant les process <code>notepad</code>. De la même manière, on va essayer de regarder avec quels arguments les instances ont été ouvertes :</p>
+<div class=highlight><pre tabindex=0 style=color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4><code class=language-bash data-lang=bash>┌──<span style=color:#f92672>(</span>kali㉿kali<span style=color:#f92672>)</span>-<span style=color:#f92672>[</span>~/Documents/ctf/MEMLABS<span style=color:#f92672>]</span>
 └─$ python ~/volatility/volatility-2.6.1/vol.py -f MemoryDump_Lab5.raw --profile<span style=color:#f92672>=</span>Win7SP1x64 cmdline -p 2744,2724,1388,2056
 Volatility Foundation Volatility Framework 2.6.1
 ************************************************************************
@@ -23,20 +147,31 @@ Command line : <span style=color:#e6db74>&#34;C:\Users\SmartNet\Videos\NOTEPAD.E
 NOTEPAD.EXE pid:   <span style=color:#ae81ff>1388</span>
 ************************************************************************
 NOTEPAD.EXE pid:   <span style=color:#ae81ff>2056</span>
-</code></pre></div><p>Tiens, le <code>NOTEPAD.EXE</code> chelou a été lancé depuis <code>C:\Users\SmartNet\Videos\</code>, à priori un exe n&rsquo;a rien à faire là-dedans ! Ca confirme bien l&rsquo;impression que ce process n&rsquo;est pas légitime, on va essayer de le dumper et de faire un strings dessus pour y voir plus clair :</p><div class=highlight><pre style=color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4><code class=language-bash data-lang=bash>┌──<span style=color:#f92672>(</span>kali㉿kali<span style=color:#f92672>)</span>-<span style=color:#f92672>[</span>~/Documents/ctf/MEMLABS<span style=color:#f92672>]</span>
+</code></pre></div><p>Tiens, le <code>NOTEPAD.EXE</code> chelou a été lancé depuis <code>C:\Users\SmartNet\Videos\</code>, à priori un exe n&rsquo;a rien à faire là-dedans ! Ca confirme bien l&rsquo;impression que ce process n&rsquo;est pas légitime, on va essayer de le dumper et de faire un strings dessus pour y voir plus clair :</p>
+<div class=highlight><pre tabindex=0 style=color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4><code class=language-bash data-lang=bash>┌──<span style=color:#f92672>(</span>kali㉿kali<span style=color:#f92672>)</span>-<span style=color:#f92672>[</span>~/Documents/ctf/MEMLABS<span style=color:#f92672>]</span>
 └─$ python ~/volatility/volatility-2.6.1/vol.py -f MemoryDump_Lab5.raw --profile<span style=color:#f92672>=</span>Win7SP1x64 procdump -p <span style=color:#ae81ff>2724</span> -D .
 Volatility Foundation Volatility Framework 2.6.1
 Process<span style=color:#f92672>(</span>V<span style=color:#f92672>)</span>         ImageBase          Name                 Result
 ------------------ ------------------ -------------------- ------
 0xfffffa800108cb30 0x0000000001000000 NOTEPAD.EXE          OK: executable.2724.exe
 
-</code></pre></div><p>Ok, <code>strings</code> ne donne rien d&rsquo;intéressant, en revanche VirusTotal flag bien le fichier comme malicieux.</p><p>A ce stade, j&rsquo;ai essayé tout ce qui me passait par la tête : regarder les shellbags, la MFT, un <code>memdump</code> sur <code>NOTEPAD.EXE</code> malicieux, mais rien d&rsquo;intéressant.</p><p>J&rsquo;ai essayé le plugin <code>screenshot</code>, qui donne un wireframe des fenêtres ouvertes au moment du dump, et là quelque chose d&rsquo;intéressant est apparu : une fenêtre du photo viewer était ouverte, avec un nom de fichier à rallonge !</p><p><img src=https://raw.githubusercontent.com/sebescudie/sebescudie.github.io/master/static/images/blog/memlab_05/screenshot.png alt></p><p>Je suppose qu&rsquo;il s&rsquo;agit d&rsquo;une string en base64, et en commençant à la recopier dans Cyberchef, les premières lettres donnent l&rsquo;output <code>flag</code> &mldr; on est bien en présence d&rsquo;un flag !</p><p>Comme j&rsquo;avais la flemme de recopier la string à la main, j&rsquo;ai cherché les premiers caractères dans un dump de la MFT que j&rsquo;avais fait plus tôt, on trouve bien <code>ZmxhZ3shIV93M0xMX2QwbjNfU3Q0ZzMtMV8wZl9MNEJfM19EMG4zXyEhfQ</code>, ce qui dans Cyberchef nous donne <code>flag{!!_w3LL_d0n3_St4g3-1_0f_L4B_3_D0n3_!!}</code>. L&rsquo;intro disait qu&rsquo;il y avait une faute dans la string, on remplace donc <code>L4B_3</code> par <code>L4B_5</code>.</p><p>A ce stade, on ne sait toujours pas vraiment à quoi servait ce <code>NOTEPAD</code> vérolé, mais on a notre flag !</p><h1 id=winrar---second-flag>WinRAR - second flag</h1><p>Une fois encore, un <code>cmdline</code> pour voir ce qui s&rsquo;est passé côté Winrar :</p><div class=highlight><pre style=color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4><code class=language-bash data-lang=bash>┌──<span style=color:#f92672>(</span>kali㉿kali<span style=color:#f92672>)</span>-<span style=color:#f92672>[</span>~/Documents/ctf/MEMLABS<span style=color:#f92672>]</span>
+</code></pre></div><p>Ok, <code>strings</code> ne donne rien d&rsquo;intéressant, en revanche VirusTotal flag bien le fichier comme malicieux.</p>
+<p>A ce stade, j&rsquo;ai essayé tout ce qui me passait par la tête : regarder les shellbags, la MFT, un <code>memdump</code> sur <code>NOTEPAD.EXE</code> malicieux, mais rien d&rsquo;intéressant.</p>
+<p>J&rsquo;ai essayé le plugin <code>screenshot</code>, qui donne un wireframe des fenêtres ouvertes au moment du dump, et là quelque chose d&rsquo;intéressant est apparu : une fenêtre du photo viewer était ouverte, avec un nom de fichier à rallonge !</p>
+<p><img src=https://raw.githubusercontent.com/sebescudie/sebescudie.github.io/master/static/images/blog/memlab_05/screenshot.png alt></p>
+<p>Je suppose qu&rsquo;il s&rsquo;agit d&rsquo;une string en base64, et en commençant à la recopier dans Cyberchef, les premières lettres donnent l&rsquo;output <code>flag</code> &mldr; on est bien en présence d&rsquo;un flag !</p>
+<p>Comme j&rsquo;avais la flemme de recopier la string à la main, j&rsquo;ai cherché les premiers caractères dans un dump de la MFT que j&rsquo;avais fait plus tôt, on trouve bien <code>ZmxhZ3shIV93M0xMX2QwbjNfU3Q0ZzMtMV8wZl9MNEJfM19EMG4zXyEhfQ</code>, ce qui dans Cyberchef nous donne <code>flag{!!_w3LL_d0n3_St4g3-1_0f_L4B_3_D0n3_!!}</code>. L&rsquo;intro disait qu&rsquo;il y avait une faute dans la string, on remplace donc <code>L4B_3</code> par <code>L4B_5</code>.</p>
+<p>A ce stade, on ne sait toujours pas vraiment à quoi servait ce <code>NOTEPAD</code> vérolé, mais on a notre flag !</p>
+<h1 id=winrar---second-flag>WinRAR - second flag</h1>
+<p>Une fois encore, un <code>cmdline</code> pour voir ce qui s&rsquo;est passé côté Winrar :</p>
+<div class=highlight><pre tabindex=0 style=color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4><code class=language-bash data-lang=bash>┌──<span style=color:#f92672>(</span>kali㉿kali<span style=color:#f92672>)</span>-<span style=color:#f92672>[</span>~/Documents/ctf/MEMLABS<span style=color:#f92672>]</span>
 └─$ python ~/volatility/volatility-2.6.1/vol.py -f MemoryDump_Lab5.raw --profile<span style=color:#f92672>=</span>Win7SP1x64 cmdline -p <span style=color:#ae81ff>2924</span>
 Volatility Foundation Volatility Framework 2.6.1
 ************************************************************************
 WinRAR.exe pid:   <span style=color:#ae81ff>2924</span>
 Command line : <span style=color:#e6db74>&#34;C:\Program Files\WinRAR\WinRAR.exe&#34;</span> <span style=color:#e6db74>&#34;C:\Users\SmartNet\Documents\SW1wb3J0YW50.rar&#34;</span>
-</code></pre></div><p>Tiens, un nom en apparence random, ça correspond avec ce que nous disait l&rsquo;intro. Essayons de le récupérer :</p><div class=highlight><pre style=color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4><code class=language-bash data-lang=bash>┌──<span style=color:#f92672>(</span>kali㉿kali<span style=color:#f92672>)</span>-<span style=color:#f92672>[</span>~/Documents/ctf/MEMLABS<span style=color:#f92672>]</span>
+</code></pre></div><p>Tiens, un nom en apparence random, ça correspond avec ce que nous disait l&rsquo;intro. Essayons de le récupérer :</p>
+<div class=highlight><pre tabindex=0 style=color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4><code class=language-bash data-lang=bash>┌──<span style=color:#f92672>(</span>kali㉿kali<span style=color:#f92672>)</span>-<span style=color:#f92672>[</span>~/Documents/ctf/MEMLABS<span style=color:#f92672>]</span>
 └─$ python ~/volatility/volatility-2.6.1/vol.py -f MemoryDump_Lab5.raw --profile<span style=color:#f92672>=</span>Win7SP1x64 filescan | grep <span style=color:#e6db74>&#34;SW1wb3J0YW50&#34;</span>       
 Volatility Foundation Volatility Framework 2.6.1
 0x000000003eed56f0      <span style=color:#ae81ff>1</span>      <span style=color:#ae81ff>0</span> R--r-- <span style=color:#ae81ff>\D</span>evice<span style=color:#ae81ff>\H</span>arddiskVolume2<span style=color:#ae81ff>\U</span>sers<span style=color:#ae81ff>\S</span>martNet<span style=color:#ae81ff>\D</span>ocuments<span style=color:#ae81ff>\S</span>W1wb3J0YW50.rar
@@ -45,7 +180,13 @@ Volatility Foundation Volatility Framework 2.6.1
 └─$ python ~/volatility/volatility-2.6.1/vol.py -f MemoryDump_Lab5.raw --profile<span style=color:#f92672>=</span>Win7SP1x64 dumpfiles -Q 0x000000003eed56f0 -D .
 Volatility Foundation Volatility Framework 2.6.1
 DataSectionObject 0x3eed56f0   None   <span style=color:#ae81ff>\D</span>evice<span style=color:#ae81ff>\H</span>arddiskVolume2<span style=color:#ae81ff>\U</span>sers<span style=color:#ae81ff>\S</span>martNet<span style=color:#ae81ff>\D</span>ocuments<span style=color:#ae81ff>\S</span>W1wb3J0YW50.rar
-</code></pre></div><p>Ok, au moment de décompresser l&rsquo;archive, on voit qu&rsquo;elle contient un fichier qui s&rsquo;appelle <code>Stage2.png</code>, mais elle est bien sûr protégée par mot de passe. L&rsquo;intro disait qu&rsquo;il fallait nécessairement le premier flag pour trouver le second, on va donc l&rsquo;essayer comme mot de passe : ça fonctionne ! On obtient l&rsquo;image suivante :</p><p><img src=https://raw.githubusercontent.com/sebescudie/sebescudie.github.io/master/static/images/blog/memlab_05/stage2_flag.png alt></p><p>Ceci dit, l&rsquo;intro nous disait que le challenge était composé de trois flags &mldr;</p><h1 id=le-bloc-note-malicieux---dernier-flag>Le bloc note malicieux - dernier flag</h1><p>J&rsquo;ai pas envie de lâcher l&rsquo;affaire avec ce process. J&rsquo;ai commencé (mais jamais terminé &mldr;) <a href=https://tryhackme.com/room/introtox8664>une room</a> sur <a href=https://fr.wikipedia.org/wiki/Radare2>radare2</a> sur TryHackMe, on va donc voir si on peut désassembler le binaire&mldr;</p><p>Quelque commandes plus tard, on arrive ici :</p><div class=highlight><pre style=color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4><code class=language-bash data-lang=bash>┌──<span style=color:#f92672>(</span>kali㉿kali<span style=color:#f92672>)</span>-<span style=color:#f92672>[</span>~/Documents/ctf/MEMLABS/malicious_notepad_procdump<span style=color:#f92672>]</span>
+</code></pre></div><p>Ok, au moment de décompresser l&rsquo;archive, on voit qu&rsquo;elle contient un fichier qui s&rsquo;appelle <code>Stage2.png</code>, mais elle est bien sûr protégée par mot de passe. L&rsquo;intro disait qu&rsquo;il fallait nécessairement le premier flag pour trouver le second, on va donc l&rsquo;essayer comme mot de passe : ça fonctionne ! On obtient l&rsquo;image suivante :</p>
+<p><img src=https://raw.githubusercontent.com/sebescudie/sebescudie.github.io/master/static/images/blog/memlab_05/stage2_flag.png alt></p>
+<p>Ceci dit, l&rsquo;intro nous disait que le challenge était composé de trois flags &mldr;</p>
+<h1 id=le-bloc-note-malicieux---dernier-flag>Le bloc note malicieux - dernier flag</h1>
+<p>J&rsquo;ai pas envie de lâcher l&rsquo;affaire avec ce process. J&rsquo;ai commencé (mais jamais terminé &mldr;) <a href=https://tryhackme.com/room/introtox8664>une room</a> sur <a href=https://fr.wikipedia.org/wiki/Radare2>radare2</a> sur TryHackMe, on va donc voir si on peut désassembler le binaire&mldr;</p>
+<p>Quelque commandes plus tard, on arrive ici :</p>
+<div class=highlight><pre tabindex=0 style=color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4><code class=language-bash data-lang=bash>┌──<span style=color:#f92672>(</span>kali㉿kali<span style=color:#f92672>)</span>-<span style=color:#f92672>[</span>~/Documents/ctf/MEMLABS/malicious_notepad_procdump<span style=color:#f92672>]</span>
 └─$ r2 NOTEPAD.EXE
 <span style=color:#f92672>[</span>0x0100739d<span style=color:#f92672>]</span>&gt; aa
 <span style=color:#f92672>[</span>x<span style=color:#f92672>]</span> Analyze all flags starting with sym. and entry0 <span style=color:#f92672>(</span>aa<span style=color:#f92672>)</span>
@@ -221,7 +362,44 @@ DataSectionObject 0x3eed56f0   None   <span style=color:#ae81ff>\D</span>evice<s
 │           0x0100759c      64a300000000   mov dword fs:<span style=color:#f92672>[</span>0<span style=color:#f92672>]</span>, eax
 └           0x010075a2      c3             ret
 <span style=color:#f92672>[</span>0x0100739d<span style=color:#f92672>]</span>&gt; 
-</code></pre></div><p>On dirait bien qu&rsquo;un flag se cache là-dedans !</p><p><code>bi0s{M3m_l4B5_0VeR_!}</code> est donc notre dernier flag !</p><h1 id=conclusion>Conclusion</h1><p>Lab intéressant, j&rsquo;ai pu apprendre pas mal de choses sur le fonctionnement de <code>WerFault</code>, et l&rsquo;aspect pseudo-RE de la fin était marrant ! Ceci-dit, je trouve les indications un peu contre-intuitives, on s&rsquo;atend à devoir chercher plusieurs fichiers, alors qu&rsquo;en fait il n&rsquo;en est rien.</p></div><div class=uk-padding-small></div><section><div class=content></div><div class=content></div></section></div></div></section></div><footer class=footer><div class=uk-container><div class="uk-grid-small uk-child-width-1-4@m uk-text-center uk-flex-center uk-margin-medium-bottom" uk-grid><div class=uk-margin-small-bottom><h5 class=uk-margin-small-bottom>Email</h5><a href=mailto:ping%20%7bat%7d%20sebescudie.fr>ping {at} sebescudie.fr</a></div><div><h5 class=uk-margin-small-bottom>Address</h5><div uk-lightbox><a href="https://www.openstreetmap.org/#map=15/48.8283/2.3695" data-caption="paris, fr" data-type=iframe>paris, fr</a></div></div></div><div class="footer-copyright uk-text-center" style=padding-bottom:1rem><img loading=lazy src=https://mirrors.creativecommons.org/presskit/icons/cc.svg style=height:1.2em;width:1.2em alt="Creative Commons">
+</code></pre></div><p>On dirait bien qu&rsquo;un flag se cache là-dedans !</p>
+<p><code>bi0s{M3m_l4B5_0VeR_!}</code> est donc notre dernier flag !</p>
+<h1 id=conclusion>Conclusion</h1>
+<p>Lab intéressant, j&rsquo;ai pu apprendre pas mal de choses sur le fonctionnement de <code>WerFault</code>, et l&rsquo;aspect pseudo-RE de la fin était marrant ! Ceci-dit, je trouve les indications un peu contre-intuitives, on s&rsquo;atend à devoir chercher plusieurs fichiers, alors qu&rsquo;en fait il n&rsquo;en est rien.</p>
+</div>
+<div class=uk-padding-small></div>
+<section>
+<div class=content>
+</div>
+<div class=content>
+</div>
+</section>
+</div>
+</div>
+</section>
+</div>
+<footer class=footer>
+<div class=uk-container>
+<div class="uk-grid-small uk-child-width-1-4@m uk-text-center uk-flex-center uk-margin-medium-bottom" uk-grid>
+<div class=uk-margin-small-bottom>
+<h5 class=uk-margin-small-bottom>Email</h5>
+<a href=mailto:ping%20%7bat%7d%20sebescudie.fr>ping {at} sebescudie.fr</a>
+</div>
+<div>
+<h5 class=uk-margin-small-bottom>Address</h5>
+<div uk-lightbox>
+<a href="https://www.openstreetmap.org/#map=15/48.8283/2.3695" data-caption="paris, fr" data-type=iframe>paris, fr</a>
+</div>
+</div>
+</div>
+<div class="footer-copyright uk-text-center" style=padding-bottom:1rem>
+<img loading=lazy src=https://mirrors.creativecommons.org/presskit/icons/cc.svg style=height:1.2em;width:1.2em alt="Creative Commons">
 <img loading=lazy src=https://mirrors.creativecommons.org/presskit/icons/by.svg style=height:1.2em;width:1.2em alt=CC-BY>
 2020
-seb escudie</div></footer><script src=https://cdn.jsdelivr.net/npm/uikit@3.2.6/dist/js/uikit.min.js></script><script src=https://cdn.jsdelivr.net/npm/uikit@3.2.6/dist/js/uikit-icons.min.js></script></body></html>
+seb escudie
+</div>
+</footer>
+<script src=https://cdn.jsdelivr.net/npm/uikit@3.2.6/dist/js/uikit.min.js></script>
+<script src=https://cdn.jsdelivr.net/npm/uikit@3.2.6/dist/js/uikit-icons.min.js></script>
+</body>
+</html>

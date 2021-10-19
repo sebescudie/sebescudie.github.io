@@ -1,10 +1,77 @@
-<!doctype html><style>html{height:100vh}body{min-height:100vh;display:grid;grid-template-rows:1fr auto}.footer{grid-row-start:2;grid-row-end:3}</style><html lang=en-us><head><meta charset=utf-8><title>sebescudie</title><meta name=viewport content="width=device-width,initial-scale=1"><meta name=description property="og:description" content="Writeup du second lab MEMLABS"><meta name=image property="og:image" content="/"><meta name=author content="seb escudie"><meta name=generator content="Hugo 0.83.1"><link rel=stylesheet href=https://cdn.jsdelivr.net/npm/uikit@3.2.6/dist/css/uikit.min.css><link rel=stylesheet href=/css/style.min.css integrity media=screen><link rel=stylesheet href=/css/syntax.min.css integrity media=screen><script src=https://cdn.jsdelivr.net/npm/mailgo@0.9.14/dist/mailgo.min.js defer></script><link rel=apple-touch-icon sizes=180x180 href=/apple-touch-icon.png><link rel=icon type=image/png sizes=32x32 href=/favicon-32x32.png><link rel=icon type=image/png sizes=16x16 href=/favicon-16x16.png><link rel=manifest href=/site.webmanifest></head><body class=blog><div class=wrapper><div uk-sticky="sel-target: .uk-navbar-container; cls-active: uk-navbar-sticky; bottom: #transparent-sticky-navbar"><nav class="uk-navbar-container uk-margin" uk-navbar="mode: click;" style=padding-right:3rem><div class=uk-navbar-right><ul class="uk-navbar-nav uk-visible@s"><li><a style=font-size:18px;text-transform:none href=/>home</a></li><li><a style=font-size:18px;text-transform:none href=/about>about</a></li><li class=uk-active><a style=font-size:18px;text-transform:none href=/blog>blog</a></li><li><a style=font-size:18px;text-transform:none href=/contact>contact</a></li><li><a style=font-size:18px;text-transform:none href=/portfolio>portfolio</a></li></ul><a class="uk-navbar-toggle uk-hidden@s" uk-toggle="target: #sidenav" uk-navbar-toggle-icon href=#></a></div></nav></div><div id=sidenav uk-offcanvas="overlay: true"><div class="uk-offcanvas-bar uk-flex uk-flex-column"><ul class="uk-nav uk-nav-primary uk-nav-center uk-margin-auto-vertical"><li><a style=font-size:18px href>home</a></li><li><a style=font-size:18px href=/about>about</a></li><li class=uk-active><a style=font-size:18px href=/blog>blog</a></li><li><a style=font-size:18px href=/contact>contact</a></li><li><a style=font-size:18px href=/portfolio>portfolio</a></li></ul></div></div><style>p{margin:0}.people-wrap{display:inline-flex;margin-top:10px}.people-image{display:block;border-radius:50%}.people{margin-left:20px;margin-right:20px}.name{margin:auto}h1,h2,h3,h4,h5,h6{color:#000;font-family:Roboto,sans-serif;line-height:1.2;margin-top:2rem}.content img{box-shadow:0 4px 8px rgba(0,0,0,.2),0 6px 20px rgba(0,0,0,.19);display:block;margin-left:auto;margin-right:auto;margin-bottom:30px}.content video{box-shadow:0 4px 8px rgba(0,0,0,.2),0 6px 20px rgba(0,0,0,.19);display:block;margin:0 auto;max-width:60vw;max-height:60vh;margin-bottom:30px}iframe{display:block;margin-left:auto;margin-right:auto;margin-bottom:30px}p{margin-bottom:1em}body p:last-child{margin-bottom:0}img.skills{height:80px}@media only screen and (min-width:960px){.content img{max-width:60vw;max-height:60vh}.content img{max-width:60vw;max-height:60vh}}.content{width:90vw;max-width:1200px}table{font-family:arial,sans-serif;border-collapse:collapse;width:100%}td,th{border:1px solid #ddd;text-align:left;padding:8px}</style><section><div class="uk-container uk-margin-large-bottom uk-margin-medium-top"><h1 class="uk-text-center uk-heading-medium">MEMLABS - LAB02</h1><p class="uk-text-center uk-text-lead">Writeup du second lab MEMLABS</p><hr class=full-width><div class=content><p>Encore un writeup, cette fois-ci sur le second lab du repo <a href=https://github.com/stuxnet999/MemLabs>MEMLABS</a> ! Sans plus attendre, la description du challenge :</p><blockquote><p>One of the clients of our company, lost the access to his system due to an unknown error. He is supposedly a very popular &ldquo;environmental&rdquo; activist. As a part of the investigation, he told us that his go to applications are browsers, his password managers etc. We hope that you can dig into this memory dump and find his important stuff and give it back to us.</p></blockquote><p>Quelles sont nos pistes ? Visiblement, on va avoir affaire à :</p><ul><li>Un browser</li><li>Un gestionnaire de mots de passe</li><li>Le &ldquo;environmental&rdquo; entre guillemets peut-être un indice indiquant qu&rsquo;on va devoir regarder du côté des variables d&rsquo;environnement</li></ul><h1 id=profil>Profil</h1><p>C&rsquo;est parti, commençons par déterminer le profil de notre sample.</p><div class=highlight><pre style=color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4><code class=language-bash data-lang=bash>┌──<span style=color:#f92672>(</span>kali㉿kali<span style=color:#f92672>)</span>-<span style=color:#f92672>[</span>~/Documents/CTF/MEMLABS<span style=color:#f92672>]</span>
+<!doctype html><style>html{height:100vh}body{min-height:100vh;display:grid;grid-template-rows:1fr auto}.footer{grid-row-start:2;grid-row-end:3}</style>
+<html lang=en-us><head>
+<meta charset=utf-8>
+<title>sebescudie</title>
+<meta name=viewport content="width=device-width,initial-scale=1">
+<meta name=description property="og:description" content="Writeup du second lab MEMLABS">
+<meta name=image property="og:image" content="/">
+<meta name=author content="seb escudie">
+<meta name=generator content="Hugo 0.88.1">
+<link rel=stylesheet href=https://cdn.jsdelivr.net/npm/uikit@3.2.6/dist/css/uikit.min.css>
+<link rel=stylesheet href=/css/style.min.css integrity media=screen>
+<link rel=stylesheet href=/css/syntax.min.css integrity media=screen>
+<script src=https://cdn.jsdelivr.net/npm/mailgo@0.9.14/dist/mailgo.min.js defer></script>
+<link rel=apple-touch-icon sizes=180x180 href=/apple-touch-icon.png>
+<link rel=icon type=image/png sizes=32x32 href=/favicon-32x32.png>
+<link rel=icon type=image/png sizes=16x16 href=/favicon-16x16.png>
+<link rel=manifest href=/site.webmanifest>
+</head>
+<body class=blog>
+<div class=wrapper><div uk-sticky="sel-target: .uk-navbar-container; cls-active: uk-navbar-sticky; bottom: #transparent-sticky-navbar">
+<nav class="uk-navbar-container uk-margin" uk-navbar="mode: click;" style=padding-right:3rem>
+<div class=uk-navbar-right>
+<ul class="uk-navbar-nav uk-visible@s">
+<li><a style=font-size:18px;text-transform:none href=/> home
+</a></li>
+<li><a style=font-size:18px;text-transform:none href=/about>about</a></li>
+<li class=uk-active><a style=font-size:18px;text-transform:none href=/blog>blog</a></li>
+<li><a style=font-size:18px;text-transform:none href=/contact>contact</a></li>
+<li><a style=font-size:18px;text-transform:none href=/portfolio>portfolio</a></li>
+</ul>
+<a class="uk-navbar-toggle uk-hidden@s" uk-toggle="target: #sidenav" uk-navbar-toggle-icon href=#></a>
+</div>
+</nav>
+</div>
+<div id=sidenav uk-offcanvas="overlay: true">
+<div class="uk-offcanvas-bar uk-flex uk-flex-column">
+<ul class="uk-nav uk-nav-primary uk-nav-center uk-margin-auto-vertical">
+<li><a style=font-size:18px href> home </a></li>
+<li><a style=font-size:18px href=/about>about</a></li>
+<li class=uk-active><a style=font-size:18px href=/blog>blog</a></li>
+<li><a style=font-size:18px href=/contact>contact</a></li>
+<li><a style=font-size:18px href=/portfolio>portfolio</a></li>
+</ul>
+</div>
+</div>
+<style>p{margin:0}.people-wrap{display:inline-flex;margin-top:10px}.people-image{display:block;border-radius:50%}.people{margin-left:20px;margin-right:20px}.name{margin:auto}h1,h2,h3,h4,h5,h6{color:#000;font-family:Roboto,sans-serif;line-height:1.2;margin-top:2rem}.content img{box-shadow:0 4px 8px rgba(0,0,0,.2),0 6px 20px rgba(0,0,0,.19);display:block;margin-left:auto;margin-right:auto;margin-bottom:30px}.content video{box-shadow:0 4px 8px rgba(0,0,0,.2),0 6px 20px rgba(0,0,0,.19);display:block;margin:0 auto;max-width:60vw;max-height:60vh;margin-bottom:30px}iframe{display:block;margin-left:auto;margin-right:auto;margin-bottom:30px}p{margin-bottom:1em}body p:last-child{margin-bottom:0}img.skills{height:80px}@media only screen and (min-width:960px){.content img{max-width:60vw;max-height:60vh}.content img{max-width:60vw;max-height:60vh}}.content{width:90vw;max-width:1200px}table{font-family:arial,sans-serif;border-collapse:collapse;width:100%}td,th{border:1px solid #ddd;text-align:left;padding:8px}</style>
+<section>
+<div class="uk-container uk-margin-large-bottom uk-margin-medium-top">
+<h1 class="uk-text-center uk-heading-medium">MEMLABS - LAB02</h1>
+<p class="uk-text-center uk-text-lead">Writeup du second lab MEMLABS</p>
+<hr class=full-width>
+<div class=content>
+<p>Encore un writeup, cette fois-ci sur le second lab du repo <a href=https://github.com/stuxnet999/MemLabs>MEMLABS</a> ! Sans plus attendre, la description du challenge :</p>
+<blockquote>
+<p>One of the clients of our company, lost the access to his system due to an unknown error. He is supposedly a very popular &ldquo;environmental&rdquo; activist. As a part of the investigation, he told us that his go to applications are browsers, his password managers etc. We hope that you can dig into this memory dump and find his important stuff and give it back to us.</p>
+</blockquote>
+<p>Quelles sont nos pistes ? Visiblement, on va avoir affaire à :</p>
+<ul>
+<li>Un browser</li>
+<li>Un gestionnaire de mots de passe</li>
+<li>Le &ldquo;environmental&rdquo; entre guillemets peut-être un indice indiquant qu&rsquo;on va devoir regarder du côté des variables d&rsquo;environnement</li>
+</ul>
+<h1 id=profil>Profil</h1>
+<p>C&rsquo;est parti, commençons par déterminer le profil de notre sample.</p>
+<div class=highlight><pre tabindex=0 style=color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4><code class=language-bash data-lang=bash>┌──<span style=color:#f92672>(</span>kali㉿kali<span style=color:#f92672>)</span>-<span style=color:#f92672>[</span>~/Documents/CTF/MEMLABS<span style=color:#f92672>]</span>
 └─$ python ~/volatility/volatility-2.6.1/vol.py -f ~/Documents/memory_samples/MemoryDump_Lab2.raw imageinfo
 Volatility Foundation Volatility Framework 2.6.1
 INFO    : volatility.debug    : Determining profile based on KDBG search...
           Suggested Profile<span style=color:#f92672>(</span>s<span style=color:#f92672>)</span> : Win7SP1x64, Win7SP0x64, Win2008R2SP0x64, Win2008R2SP1x64_24000, Win2008R2SP1x64_23418, Win2008R2SP1x64, Win7SP1x64_24000, Win7SP1x64_23418
 <span style=color:#f92672>[</span>...<span style=color:#f92672>]</span>
-</code></pre></div><p>Ok, <code>Win7SP1x64</code> it is.</p><h1 id=ctrlshiftesc>CTRL+SHIFT+ESC</h1><p>Regardons maintenant ce qui se passait sur la machine au moment du dump avec <code>pslist</code> :</p><div class=highlight><pre style=color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4><code class=language-bash data-lang=bash>┌──<span style=color:#f92672>(</span>kali㉿kali<span style=color:#f92672>)</span>-<span style=color:#f92672>[</span>~/Documents/CTF/MEMLABS<span style=color:#f92672>]</span>
+</code></pre></div><p>Ok, <code>Win7SP1x64</code> it is.</p>
+<h1 id=ctrlshiftesc>CTRL+SHIFT+ESC</h1>
+<p>Regardons maintenant ce qui se passait sur la machine au moment du dump avec <code>pslist</code> :</p>
+<div class=highlight><pre tabindex=0 style=color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4><code class=language-bash data-lang=bash>┌──<span style=color:#f92672>(</span>kali㉿kali<span style=color:#f92672>)</span>-<span style=color:#f92672>[</span>~/Documents/CTF/MEMLABS<span style=color:#f92672>]</span>
 └─$ python ~/volatility/volatility-2.6.1/vol.py -f ~/Documents/memory_samples/MemoryDump_Lab2.raw --profile<span style=color:#f92672>=</span>Win7SP1x64 pslist
 Volatility Foundation Volatility Framework 2.6.1
 Offset<span style=color:#f92672>(</span>V<span style=color:#f92672>)</span>          Name                    PID   PPID   Thds     Hnds   Sess  Wow64 Start                          Exit                          
@@ -63,26 +130,57 @@ Offset<span style=color:#f92672>(</span>V<span style=color:#f92672>)</span>     
 0xfffffa80011aa060 DumpIt.exe             <span style=color:#ae81ff>3844</span>   <span style=color:#ae81ff>1064</span>      <span style=color:#ae81ff>2</span>       <span style=color:#ae81ff>45</span>      <span style=color:#ae81ff>1</span>      <span style=color:#ae81ff>1</span> 2019-12-14 10:38:43 UTC+0000                                 
 0xfffffa8001194570 conhost.exe            <span style=color:#ae81ff>3852</span>    <span style=color:#ae81ff>368</span>      <span style=color:#ae81ff>2</span>       <span style=color:#ae81ff>52</span>      <span style=color:#ae81ff>1</span>      <span style=color:#ae81ff>0</span> 2019-12-14 10:38:43 UTC+0000                                 
 0xfffffa8001189b30 WmiPrvSE.exe           <span style=color:#ae81ff>4004</span>    <span style=color:#ae81ff>588</span>      <span style=color:#ae81ff>9</span>  <span style=color:#ae81ff>1572864</span> ------      <span style=color:#ae81ff>0</span> 2019-12-14 10:39:00 UTC+0000                                 
-</code></pre></div><p>On peut ici isoler quelques processes interessants. Notons leurs PID pour plus tard!</p><table><thead><tr><th>Process</th><th>PID</th></tr></thead><tbody><tr><td>KeePass.exe</td><td>3008</td></tr><tr><td>chrome.exe</td><td>1632</td></tr><tr><td>notepad.exe</td><td>3260</td></tr></tbody></table><h1 id=notepad---premier-flag>Notepad - premier flag</h1><p>Je me souviens avoir croisé dans l&rsquo;aide de volatility un plugin qui concernait notepad :</p><pre><code>notepad         List currently displayed notepad text
-</code></pre><p>Essayons le sur notre sample, voir si on arrive à extraire quelque chose d&rsquo;intéressant :</p><div class=highlight><pre style=color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4><code class=language-bash data-lang=bash>┌──<span style=color:#f92672>(</span>kali㉿kali<span style=color:#f92672>)</span>-<span style=color:#f92672>[</span>~/Documents/CTF/MEMLABS<span style=color:#f92672>]</span>
+</code></pre></div><p>On peut ici isoler quelques processes interessants. Notons leurs PID pour plus tard!</p>
+<table>
+<thead>
+<tr>
+<th>Process</th>
+<th>PID</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>KeePass.exe</td>
+<td>3008</td>
+</tr>
+<tr>
+<td>chrome.exe</td>
+<td>1632</td>
+</tr>
+<tr>
+<td>notepad.exe</td>
+<td>3260</td>
+</tr>
+</tbody>
+</table>
+<h1 id=notepad---premier-flag>Notepad - premier flag</h1>
+<p>Je me souviens avoir croisé dans l&rsquo;aide de volatility un plugin qui concernait notepad :</p>
+<pre tabindex=0><code>notepad         List currently displayed notepad text
+</code></pre><p>Essayons le sur notre sample, voir si on arrive à extraire quelque chose d&rsquo;intéressant :</p>
+<div class=highlight><pre tabindex=0 style=color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4><code class=language-bash data-lang=bash>┌──<span style=color:#f92672>(</span>kali㉿kali<span style=color:#f92672>)</span>-<span style=color:#f92672>[</span>~/Documents/CTF/MEMLABS<span style=color:#f92672>]</span>
 └─$ python ~/volatility/volatility-2.6.1/vol.py -f ~/Documents/memory_samples/MemoryDump_Lab2.raw --profile<span style=color:#f92672>=</span>Win7SP1x64 notepad
 Volatility Foundation Volatility Framework 2.6.1
 ERROR   : volatility.debug    : This command does not support the profile Win7SP1x64
-</code></pre></div><p>Bon, visiblement c&rsquo;est non.</p><p>Peut-être qu&rsquo;on peut regarder avec quels args le process a été lancé ?</p><div class=highlight><pre style=color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4><code class=language-bash data-lang=bash>┌──<span style=color:#f92672>(</span>kali㉿kali<span style=color:#f92672>)</span>-<span style=color:#f92672>[</span>~/Documents/CTF/MEMLABS<span style=color:#f92672>]</span>
+</code></pre></div><p>Bon, visiblement c&rsquo;est non.</p>
+<p>Peut-être qu&rsquo;on peut regarder avec quels args le process a été lancé ?</p>
+<div class=highlight><pre tabindex=0 style=color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4><code class=language-bash data-lang=bash>┌──<span style=color:#f92672>(</span>kali㉿kali<span style=color:#f92672>)</span>-<span style=color:#f92672>[</span>~/Documents/CTF/MEMLABS<span style=color:#f92672>]</span>
 └─$ python ~/volatility/volatility-2.6.1/vol.py -f ~/Documents/memory_samples/MemoryDump_Lab2.raw --profile<span style=color:#f92672>=</span>Win7SP1x64 cmdline -p <span style=color:#ae81ff>3260</span>                                          <span style=color:#ae81ff>1</span> ⨯
 Volatility Foundation Volatility Framework 2.6.1
 ************************************************************************
 notepad.exe pid:   <span style=color:#ae81ff>3260</span>
 Command line : <span style=color:#e6db74>&#34;C:\Windows\system32\NOTEPAD.EXE&#34;</span> C:<span style=color:#ae81ff>\U</span>sers<span style=color:#ae81ff>\S</span>martNet<span style=color:#ae81ff>\S</span>ecrets<span style=color:#ae81ff>\H</span>idden.kdbx
-</code></pre></div><p>Un fichier Keepass (mais pourquoi avoir cherché à l&rsquo;ouvrir avec notepad ?!) ! Essayons de le récupérer :</p><div class=highlight><pre style=color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4><code class=language-bash data-lang=bash>┌──<span style=color:#f92672>(</span>kali㉿kali<span style=color:#f92672>)</span>-<span style=color:#f92672>[</span>~/Documents/CTF/MEMLABS<span style=color:#f92672>]</span>
+</code></pre></div><p>Un fichier Keepass (mais pourquoi avoir cherché à l&rsquo;ouvrir avec notepad ?!) ! Essayons de le récupérer :</p>
+<div class=highlight><pre tabindex=0 style=color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4><code class=language-bash data-lang=bash>┌──<span style=color:#f92672>(</span>kali㉿kali<span style=color:#f92672>)</span>-<span style=color:#f92672>[</span>~/Documents/CTF/MEMLABS<span style=color:#f92672>]</span>
 └─$ python ~/volatility/volatility-2.6.1/vol.py -f ~/Documents/memory_samples/MemoryDump_Lab2.raw --profile<span style=color:#f92672>=</span>Win7SP1x64 filescan | grep <span style=color:#e6db74>&#34;Hidden.kdbx&#34;</span>
 Volatility Foundation Volatility Framework 2.6.1
 0x000000003fb112a0     <span style=color:#ae81ff>16</span>      <span style=color:#ae81ff>0</span> R--r-- <span style=color:#ae81ff>\D</span>evice<span style=color:#ae81ff>\H</span>arddiskVolume2<span style=color:#ae81ff>\U</span>sers<span style=color:#ae81ff>\S</span>martNet<span style=color:#ae81ff>\S</span>ecrets<span style=color:#ae81ff>\H</span>idden.kdbx
-</code></pre></div><p>Il est bien là.</p><div class=highlight><pre style=color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4><code class=language-bash data-lang=bash>┌──<span style=color:#f92672>(</span>kali㉿kali<span style=color:#f92672>)</span>-<span style=color:#f92672>[</span>~/Documents/CTF/MEMLABS<span style=color:#f92672>]</span>
+</code></pre></div><p>Il est bien là.</p>
+<div class=highlight><pre tabindex=0 style=color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4><code class=language-bash data-lang=bash>┌──<span style=color:#f92672>(</span>kali㉿kali<span style=color:#f92672>)</span>-<span style=color:#f92672>[</span>~/Documents/CTF/MEMLABS<span style=color:#f92672>]</span>
 └─$ python ~/volatility/volatility-2.6.1/vol.py -f ~/Documents/memory_samples/MemoryDump_Lab2.raw --profile<span style=color:#f92672>=</span>Win7SP1x64 dumpfiles -Q 0x000000003fb112a0 -D .                     <span style=color:#ae81ff>1</span> ⨯
 Volatility Foundation Volatility Framework 2.6.1
 DataSectionObject 0x3fb112a0   None   <span style=color:#ae81ff>\D</span>evice<span style=color:#ae81ff>\H</span>arddiskVolume2<span style=color:#ae81ff>\U</span>sers<span style=color:#ae81ff>\S</span>martNet<span style=color:#ae81ff>\S</span>ecrets<span style=color:#ae81ff>\H</span>idden.kdbx
-</code></pre></div><p>Super. Renommons le fichier dumpé en <code>secret.kdbx</code> et essayons de l&rsquo;ouvrir avec KeepassXC.. evidement on nous demande un mot de passe. L&rsquo;intro du CTF mentionnait &ldquo;environment&rdquo;, peut-être que volatility nous permet de lister les varibles d&rsquo;environnement de la machine ?</p><div class=highlight><pre style=color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4><code class=language-bash data-lang=bash>┌──<span style=color:#f92672>(</span>kali㉿kali<span style=color:#f92672>)</span>-<span style=color:#f92672>[</span>~/Documents/CTF/MEMLABS<span style=color:#f92672>]</span>
+</code></pre></div><p>Super. Renommons le fichier dumpé en <code>secret.kdbx</code> et essayons de l&rsquo;ouvrir avec KeepassXC.. evidement on nous demande un mot de passe. L&rsquo;intro du CTF mentionnait &ldquo;environment&rdquo;, peut-être que volatility nous permet de lister les varibles d&rsquo;environnement de la machine ?</p>
+<div class=highlight><pre tabindex=0 style=color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4><code class=language-bash data-lang=bash>┌──<span style=color:#f92672>(</span>kali㉿kali<span style=color:#f92672>)</span>-<span style=color:#f92672>[</span>~/Documents/CTF/MEMLABS<span style=color:#f92672>]</span>
 └─$ python ~/volatility/volatility-2.6.1/vol.py -f ~/Documents/memory_samples/MemoryDump_Lab2.raw --profile<span style=color:#f92672>=</span>Win7SP1x64 envars -p <span style=color:#ae81ff>3008</span>
 Volatility Foundation Volatility Framework 2.6.1
 Pid      Process              Block              Variable                       Value
@@ -125,16 +223,22 @@ Pid      Process              Block              Variable                       
     <span style=color:#ae81ff>3008</span> KeePass.exe          0x0000000000161320 windir                         C:<span style=color:#ae81ff>\W</span>indows
     <span style=color:#ae81ff>3008</span> KeePass.exe          0x0000000000161320 windows_tracing_flags          <span style=color:#ae81ff>3</span>
     <span style=color:#ae81ff>3008</span> KeePass.exe          0x0000000000161320 windows_tracing_logfile        C:<span style=color:#ae81ff>\B</span>VTBin<span style=color:#ae81ff>\T</span>ests<span style=color:#ae81ff>\i</span>nstallpackage<span style=color:#ae81ff>\c</span>silogfile.log
-</code></pre></div><p>Mh, la variable <code>NEW_TMP</code> est étrange : <code>C:\Windows\ZmxhZ3t3M2xjMG0zX1QwXyRUNGczXyFfT2ZfTDRCXzJ9</code>. On dirait une string en base64, essayons de la décoder :</p><div class=highlight><pre style=color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4><code class=language-bash data-lang=bash>┌──<span style=color:#f92672>(</span>kali㉿kali<span style=color:#f92672>)</span>-<span style=color:#f92672>[</span>~/Documents/CTF/MEMLABS<span style=color:#f92672>]</span>
+</code></pre></div><p>Mh, la variable <code>NEW_TMP</code> est étrange : <code>C:\Windows\ZmxhZ3t3M2xjMG0zX1QwXyRUNGczXyFfT2ZfTDRCXzJ9</code>. On dirait une string en base64, essayons de la décoder :</p>
+<div class=highlight><pre tabindex=0 style=color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4><code class=language-bash data-lang=bash>┌──<span style=color:#f92672>(</span>kali㉿kali<span style=color:#f92672>)</span>-<span style=color:#f92672>[</span>~/Documents/CTF/MEMLABS<span style=color:#f92672>]</span>
 └─$ echo ZmxhZ3t3M2xjMG0zX1QwXyRUNGczXyFfT2ZfTDRCXzJ9 | base64 --decode
 flag<span style=color:#f92672>{</span>w3lc0m3_T0_$T4g3_!_Of_L4B_2<span style=color:#f92672>}</span>
-</code></pre></div><p>Et hop, premier flag ! Ceci dit, ce n&rsquo;est pas le mot de passe de notre fichier keepas. J&rsquo;imagine qu&rsquo;on trouvera l&rsquo;info plus tard.</p><p>Ici j&rsquo;ai d&rsquo;abord lancé <code>envars</code> sans PID, mais devant la masse de résultats, j&rsquo;ai filtré avec celui de Keepass, pour voir si quelque chose s&rsquo;en dégageait. On a bien trouvé notre flag mais j&rsquo;avoue ne pas trop comprendre pourquoi cette variable est rattachée au PID en question&mldr;</p><p>Par acquis de conscience, j&rsquo;ai vérifié le résultat de <code>cmdline</code> sur le PID de keepass, on trouve bien le même fichier :</p><div class=highlight><pre style=color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4><code class=language-bash data-lang=bash>┌──<span style=color:#f92672>(</span>kali㉿kali<span style=color:#f92672>)</span>-<span style=color:#f92672>[</span>~/Documents/CTF/MEMLABS<span style=color:#f92672>]</span>
+</code></pre></div><p>Et hop, premier flag ! Ceci dit, ce n&rsquo;est pas le mot de passe de notre fichier keepas. J&rsquo;imagine qu&rsquo;on trouvera l&rsquo;info plus tard.</p>
+<p>Ici j&rsquo;ai d&rsquo;abord lancé <code>envars</code> sans PID, mais devant la masse de résultats, j&rsquo;ai filtré avec celui de Keepass, pour voir si quelque chose s&rsquo;en dégageait. On a bien trouvé notre flag mais j&rsquo;avoue ne pas trop comprendre pourquoi cette variable est rattachée au PID en question&mldr;</p>
+<p>Par acquis de conscience, j&rsquo;ai vérifié le résultat de <code>cmdline</code> sur le PID de keepass, on trouve bien le même fichier :</p>
+<div class=highlight><pre tabindex=0 style=color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4><code class=language-bash data-lang=bash>┌──<span style=color:#f92672>(</span>kali㉿kali<span style=color:#f92672>)</span>-<span style=color:#f92672>[</span>~/Documents/CTF/MEMLABS<span style=color:#f92672>]</span>
 └─$ python ~/volatility/volatility-2.6.1/vol.py -f ~/Documents/memory_samples/MemoryDump_Lab2.raw --profile<span style=color:#f92672>=</span>Win7SP1x64 cmdline -p <span style=color:#ae81ff>3008</span>  
 Volatility Foundation Volatility Framework 2.6.1
 ************************************************************************
 KeePass.exe pid:   <span style=color:#ae81ff>3008</span>
 Command line : <span style=color:#e6db74>&#34;C:\Program Files (x86)\KeePass Password Safe 2\KeePass.exe&#34;</span> <span style=color:#e6db74>&#34;C:\Users\SmartNet\Secrets\Hidden.kdbx&#34;</span>
-</code></pre></div><h1 id=chrome---troisième-flag>Chrome - troisième flag</h1><p>Il était fait mention dans l&rsquo;intro d&rsquo;un navigateur. Dans la liste des process, on tombe sur un <code>chrome.exe</code>. De base, volatility ne dispose d&rsquo;aucun plugin pour extraire des renseignements facilement d&rsquo;un browser (historique de navigation, cookies..), on devrait faire ça à la main. Ceci dit, après une petite recherche, on tombe sur le repo <a href=https://github.com/superponible/volatility-plugins>volatility-plugins</a> de <a href=https://github.com/superponible>superponible</a>, qui propose entre autres un plugin <code>chromehistory</code>, qui nous donne accès à des tas de choses intéressantes sur le browser (historique, cookies, termes de recherche, etc.). Et en effet, c&rsquo;est très simple à utiliser :</p><div class=highlight><pre style=color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4><code class=language-bash data-lang=bash>┌──<span style=color:#f92672>(</span>kali㉿kali<span style=color:#f92672>)</span>-<span style=color:#f92672>[</span>~/Documents/CTF/MEMLABS<span style=color:#f92672>]</span>
+</code></pre></div><h1 id=chrome---troisième-flag>Chrome - troisième flag</h1>
+<p>Il était fait mention dans l&rsquo;intro d&rsquo;un navigateur. Dans la liste des process, on tombe sur un <code>chrome.exe</code>. De base, volatility ne dispose d&rsquo;aucun plugin pour extraire des renseignements facilement d&rsquo;un browser (historique de navigation, cookies..), on devrait faire ça à la main. Ceci dit, après une petite recherche, on tombe sur le repo <a href=https://github.com/superponible/volatility-plugins>volatility-plugins</a> de <a href=https://github.com/superponible>superponible</a>, qui propose entre autres un plugin <code>chromehistory</code>, qui nous donne accès à des tas de choses intéressantes sur le browser (historique, cookies, termes de recherche, etc.). Et en effet, c&rsquo;est très simple à utiliser :</p>
+<div class=highlight><pre tabindex=0 style=color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4><code class=language-bash data-lang=bash>┌──<span style=color:#f92672>(</span>kali㉿kali<span style=color:#f92672>)</span>-<span style=color:#f92672>[</span>~/Documents/CTF/MEMLABS<span style=color:#f92672>]</span>
 └─$ python ~/volatility/volatility-2.6.1/vol.py -f ~/Documents/memory_samples/MemoryDump_Lab2.raw --profile<span style=color:#f92672>=</span>Win7SP1x64 chromehistory  
 Volatility Foundation Volatility Framework 2.6.1
 Index  URL                                                                              Title                                                                            Visits Typed Last Visit Time            Hidden Favicon ID
@@ -172,24 +276,37 @@ Index  URL                                                                      
      <span style=color:#ae81ff>3</span> https://www.google.com/                                                          Google                                                                                <span style=color:#ae81ff>2</span>     <span style=color:#ae81ff>1</span> 2019-12-14 09:32:52.147284        N/A       
      <span style=color:#ae81ff>2</span> https://chrome.google.com/webstore/category/extensions?hl<span style=color:#f92672>=</span>en                     Chrome Web Store - Extensions                                                         <span style=color:#ae81ff>1</span>     <span style=color:#ae81ff>0</span> 2019-12-14 09:32:53.844597        N/A       
      <span style=color:#ae81ff>1</span> https://chrome.google.com/webstore?hl<span style=color:#f92672>=</span>en                                         Chrome Web Store - Extensions                                                         <span style=color:#ae81ff>1</span>     <span style=color:#ae81ff>0</span> 2019-12-14 09:16:05.724461        N/A       
-</code></pre></div><p>Le lien MegaUpload saute directement aux yeux. Voyons ce qui se cache derrière..</p><p><img src=https://raw.githubusercontent.com/sebescudie/sebescudie.github.io/master/static/images/blog/memlab_02/megaupload.png alt></p><p>Une archive <code>Important.zip</code> ! Après l&rsquo;avoir téléchargée, essayons de la déziper :</p><div class=highlight><pre style=color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4><code class=language-bash data-lang=bash>┌──<span style=color:#f92672>(</span>kali㉿kali<span style=color:#f92672>)</span>-<span style=color:#f92672>[</span>~/Downloads<span style=color:#f92672>]</span>
+</code></pre></div><p>Le lien MegaUpload saute directement aux yeux. Voyons ce qui se cache derrière..</p>
+<p><img src=https://raw.githubusercontent.com/sebescudie/sebescudie.github.io/master/static/images/blog/memlab_02/megaupload.png alt></p>
+<p>Une archive <code>Important.zip</code> ! Après l&rsquo;avoir téléchargée, essayons de la déziper :</p>
+<div class=highlight><pre tabindex=0 style=color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4><code class=language-bash data-lang=bash>┌──<span style=color:#f92672>(</span>kali㉿kali<span style=color:#f92672>)</span>-<span style=color:#f92672>[</span>~/Downloads<span style=color:#f92672>]</span>
 └─$ 7z x Important.zip   
 
 7-Zip <span style=color:#f92672>[</span>64<span style=color:#f92672>]</span> 16.02 : Copyright <span style=color:#f92672>(</span>c<span style=color:#f92672>)</span> 1999-2016 Igor Pavlov : 2016-05-21
 <span style=color:#f92672>[</span>...<span style=color:#f92672>]</span>
 Comment <span style=color:#f92672>=</span> Password is SHA1<span style=color:#f92672>(</span>stage-3-FLAG<span style=color:#f92672>)</span> from Lab-1. Password is in lowercase.
-</code></pre></div><p>Evidement elle est protégée par mot de passe, et on nous indique qu&rsquo;il s&rsquo;agit du SHA1 du troisième flag du premier lab. Si on s&rsquo;en réfère au <a href=https://sebescudie.github.io/blog/memlab_01/>writeup publié sur ce même blog</a>, le troisième flag était <code>flag{w3ll_3rd_stage_was_easy</code>.</p><p>Calculons le SHA1 du flag :</p><div class=highlight><pre style=color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4><code class=language-bash data-lang=bash>┌──<span style=color:#f92672>(</span>kali㉿kali<span style=color:#f92672>)</span>-<span style=color:#f92672>[</span>~/Documents/CTF/MEMLABS<span style=color:#f92672>]</span>
+</code></pre></div><p>Evidement elle est protégée par mot de passe, et on nous indique qu&rsquo;il s&rsquo;agit du SHA1 du troisième flag du premier lab. Si on s&rsquo;en réfère au <a href=https://sebescudie.github.io/blog/memlab_01/>writeup publié sur ce même blog</a>, le troisième flag était <code>flag{w3ll_3rd_stage_was_easy</code>.</p>
+<p>Calculons le SHA1 du flag :</p>
+<div class=highlight><pre tabindex=0 style=color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4><code class=language-bash data-lang=bash>┌──<span style=color:#f92672>(</span>kali㉿kali<span style=color:#f92672>)</span>-<span style=color:#f92672>[</span>~/Documents/CTF/MEMLABS<span style=color:#f92672>]</span>
 └─$ echo -n flag<span style=color:#f92672>{</span>w3ll_3rd_stage_was_easy<span style=color:#f92672>}</span> | sha1sum                                                                                                                                                                         <span style=color:#ae81ff>127</span> ⨯
 6045dd90029719a039fd2d2ebcca718439dd100a  -
-</code></pre></div><p>On arrive bien à dézipper l&rsquo;archive en fournissant ce mot de passe, et on obtient le troisième flag !</p><p><img src=https://raw.githubusercontent.com/sebescudie/sebescudie.github.io/master/static/images/blog/memlab_02/flag3.png alt></p><p>Il nous manque maintenant le deuxième &mldr;</p><h1 id=keepass>Keepass</h1><p>Après quelques recherches sur la manière d&rsquo;extraire un master password Keypass d&rsquo;un dump mémoire, je tombe sur <a href=https://blog.bi0s.in/2020/02/09/Forensics/HackTM-FindMyPass/>le writeup d&rsquo;un autre CTF</a> qui donne des informations intéressantes sur le sujet.
-Comme le fait remarquer l&rsquo;auteur du writeup (qui semble d&rsquo;ailleurs être la personne qui a créé le CTF que nous sommes en train de faire !), la base de données keepass était ouverte au moment du dump (on avait bien un process <code>keepass.exe</code> en train de tourner, ayant été lancé avec le fichier <code>kdbx</code> qu&rsquo;on a dumpé plus tôt). Ce qui signifie que le master password est probablement quelque part dans la RAM.</p><p>L&rsquo;auteur suggère ensuite de dumper le process en question, et faire un <code>strings</code> dessus pour y trouver le mot de passe. Et bien allons-y !</p><div class=highlight><pre style=color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4><code class=language-bash data-lang=bash>┌──<span style=color:#f92672>(</span>kali㉿kali<span style=color:#f92672>)</span>-<span style=color:#f92672>[</span>~/Documents/CTF/MEMLABS<span style=color:#f92672>]</span>
+</code></pre></div><p>On arrive bien à dézipper l&rsquo;archive en fournissant ce mot de passe, et on obtient le troisième flag !</p>
+<p><img src=https://raw.githubusercontent.com/sebescudie/sebescudie.github.io/master/static/images/blog/memlab_02/flag3.png alt></p>
+<p>Il nous manque maintenant le deuxième &mldr;</p>
+<h1 id=keepass>Keepass</h1>
+<p>Après quelques recherches sur la manière d&rsquo;extraire un master password Keypass d&rsquo;un dump mémoire, je tombe sur <a href=https://blog.bi0s.in/2020/02/09/Forensics/HackTM-FindMyPass/>le writeup d&rsquo;un autre CTF</a> qui donne des informations intéressantes sur le sujet.
+Comme le fait remarquer l&rsquo;auteur du writeup (qui semble d&rsquo;ailleurs être la personne qui a créé le CTF que nous sommes en train de faire !), la base de données keepass était ouverte au moment du dump (on avait bien un process <code>keepass.exe</code> en train de tourner, ayant été lancé avec le fichier <code>kdbx</code> qu&rsquo;on a dumpé plus tôt). Ce qui signifie que le master password est probablement quelque part dans la RAM.</p>
+<p>L&rsquo;auteur suggère ensuite de dumper le process en question, et faire un <code>strings</code> dessus pour y trouver le mot de passe. Et bien allons-y !</p>
+<div class=highlight><pre tabindex=0 style=color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4><code class=language-bash data-lang=bash>┌──<span style=color:#f92672>(</span>kali㉿kali<span style=color:#f92672>)</span>-<span style=color:#f92672>[</span>~/Documents/CTF/MEMLABS<span style=color:#f92672>]</span>
 └─$ python ~/volatility/volatility-2.6.1/vol.py -f ~/Documents/memory_samples/MemoryDump_Lab2.raw --profile<span style=color:#f92672>=</span>Win7SP1x64 memdump -p <span style=color:#ae81ff>3008</span> -D ./memdump 
 Volatility Foundation Volatility Framework 2.6.1
 ************************************************************************
 Writing KeePass.exe <span style=color:#f92672>[</span>  3008<span style=color:#f92672>]</span> to 3008.dmp
-</code></pre></div><p>On maintenant notre dump, voyons ce que nous dit <code>strings</code>.</p><div class=highlight><pre style=color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4><code class=language-bash data-lang=bash>┌──<span style=color:#f92672>(</span>kali㉿kali<span style=color:#f92672>)</span>-<span style=color:#f92672>[</span>~/Documents/CTF/MEMLABS<span style=color:#f92672>]</span>
+</code></pre></div><p>On maintenant notre dump, voyons ce que nous dit <code>strings</code>.</p>
+<div class=highlight><pre tabindex=0 style=color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4><code class=language-bash data-lang=bash>┌──<span style=color:#f92672>(</span>kali㉿kali<span style=color:#f92672>)</span>-<span style=color:#f92672>[</span>~/Documents/CTF/MEMLABS<span style=color:#f92672>]</span>
 └─$ strings ./memdump/3008.dmp &gt; strings.txt
-</code></pre></div><p>Après dix siècles de scroll à la recherche d&rsquo;un indice, rien d&rsquo;intéressant. J&rsquo;abandonne la piste du <code>memdump</code> (d&rsquo;autant plus que je ne maitrise pas des masses le sujet) pour tester quelque chose de plus débile : et si notre environmental activist avait noté son mot de passe quelque part sur son ordinateur ? Essayons un <code>filescan</code> avec <code>password</code> &mldr;</p><div class=highlight><pre style=color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4><code class=language-bash data-lang=bash>┌──<span style=color:#f92672>(</span>kali㉿kali<span style=color:#f92672>)</span>-<span style=color:#f92672>[</span>~/Documents/CTF/MEMLABS<span style=color:#f92672>]</span>
+</code></pre></div><p>Après dix siècles de scroll à la recherche d&rsquo;un indice, rien d&rsquo;intéressant. J&rsquo;abandonne la piste du <code>memdump</code> (d&rsquo;autant plus que je ne maitrise pas des masses le sujet) pour tester quelque chose de plus débile : et si notre environmental activist avait noté son mot de passe quelque part sur son ordinateur ? Essayons un <code>filescan</code> avec <code>password</code> &mldr;</p>
+<div class=highlight><pre tabindex=0 style=color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4><code class=language-bash data-lang=bash>┌──<span style=color:#f92672>(</span>kali㉿kali<span style=color:#f92672>)</span>-<span style=color:#f92672>[</span>~/Documents/CTF/MEMLABS<span style=color:#f92672>]</span>
 └─$ python ~/volatility/volatility-2.6.1/vol.py -f ~/Documents/memory_samples/MemoryDump_Lab2.raw --profile<span style=color:#f92672>=</span>Win7SP1x64 filescan | grep -i <span style=color:#e6db74>&#34;password&#34;</span>
 Volatility Foundation Volatility Framework 2.6.1
 0x000000003e868370     <span style=color:#ae81ff>16</span>      <span style=color:#ae81ff>0</span> R--r-d <span style=color:#ae81ff>\D</span>evice<span style=color:#ae81ff>\H</span>arddiskVolume2<span style=color:#ae81ff>\P</span>rogram Files <span style=color:#f92672>(</span>x86<span style=color:#f92672>)</span><span style=color:#ae81ff>\K</span>eePass Password Safe 2<span style=color:#ae81ff>\K</span>eePass.exe.config
@@ -201,7 +318,45 @@ Volatility Foundation Volatility Framework 2.6.1
 0x000000003fce1c70      <span style=color:#ae81ff>1</span>      <span style=color:#ae81ff>0</span> R--r-d <span style=color:#ae81ff>\D</span>evice<span style=color:#ae81ff>\H</span>arddiskVolume2<span style=color:#ae81ff>\U</span>sers<span style=color:#ae81ff>\A</span>lissa Simpson<span style=color:#ae81ff>\P</span>ictures<span style=color:#ae81ff>\P</span>assword.png
 0x000000003fd62f20      <span style=color:#ae81ff>2</span>      <span style=color:#ae81ff>0</span> R--r-- <span style=color:#ae81ff>\D</span>evice<span style=color:#ae81ff>\H</span>arddiskVolume2<span style=color:#ae81ff>\P</span>rogram Files <span style=color:#f92672>(</span>x86<span style=color:#f92672>)</span><span style=color:#ae81ff>\K</span>eePass Password Safe 2<span style=color:#ae81ff>\K</span>eePass.config.xml
 0x000000003fecf820     <span style=color:#ae81ff>15</span>      <span style=color:#ae81ff>0</span> R--r-d <span style=color:#ae81ff>\D</span>evice<span style=color:#ae81ff>\H</span>arddiskVolume2<span style=color:#ae81ff>\P</span>rogram Files <span style=color:#f92672>(</span>x86<span style=color:#f92672>)</span><span style=color:#ae81ff>\K</span>eePass Password Safe 2<span style=color:#ae81ff>\u</span>nins000.exe
-</code></pre></div><p>Tiens <code>Password.png</code>&mldr; Une fois encore, essayons d&rsquo;extraire le fichier (je vous fait grâce de la commande cette fois-ci) .. ça fonctionne ! L&rsquo;image nous donne bien le mot de passe, ceci-dit il faudra un tout peut peu chercher dedans ;)</p><p>On fouille maintenant la base données, rien d&rsquo;intéressant à première vue, quelques mots de passe randoms .. Regardons dans la corbeille de la DB Keepass</p><p><img src=https://raw.githubusercontent.com/sebescudie/sebescudie.github.io/master/static/images/blog/memlab_02/keepass_01.png alt></p><p>Quand on double-click sur cette entrée et qu&rsquo;on révèle le mot de passe, bingo, on a notre second flag !</p><p><img src=https://raw.githubusercontent.com/sebescudie/sebescudie.github.io/master/static/images/blog/memlab_02/keepass_02.png alt></p></div><div class=uk-padding-small></div><section><div class=content></div><div class=content></div></section></div></div></section></div><footer class=footer><div class=uk-container><div class="uk-grid-small uk-child-width-1-4@m uk-text-center uk-flex-center uk-margin-medium-bottom" uk-grid><div class=uk-margin-small-bottom><h5 class=uk-margin-small-bottom>Email</h5><a href=mailto:ping%20%7bat%7d%20sebescudie.fr>ping {at} sebescudie.fr</a></div><div><h5 class=uk-margin-small-bottom>Address</h5><div uk-lightbox><a href="https://www.openstreetmap.org/#map=15/48.8283/2.3695" data-caption="paris, fr" data-type=iframe>paris, fr</a></div></div></div><div class="footer-copyright uk-text-center" style=padding-bottom:1rem><img loading=lazy src=https://mirrors.creativecommons.org/presskit/icons/cc.svg style=height:1.2em;width:1.2em alt="Creative Commons">
+</code></pre></div><p>Tiens <code>Password.png</code>&mldr; Une fois encore, essayons d&rsquo;extraire le fichier (je vous fait grâce de la commande cette fois-ci) .. ça fonctionne ! L&rsquo;image nous donne bien le mot de passe, ceci-dit il faudra un tout peut peu chercher dedans ;)</p>
+<p>On fouille maintenant la base données, rien d&rsquo;intéressant à première vue, quelques mots de passe randoms .. Regardons dans la corbeille de la DB Keepass</p>
+<p><img src=https://raw.githubusercontent.com/sebescudie/sebescudie.github.io/master/static/images/blog/memlab_02/keepass_01.png alt></p>
+<p>Quand on double-click sur cette entrée et qu&rsquo;on révèle le mot de passe, bingo, on a notre second flag !</p>
+<p><img src=https://raw.githubusercontent.com/sebescudie/sebescudie.github.io/master/static/images/blog/memlab_02/keepass_02.png alt></p>
+</div>
+<div class=uk-padding-small></div>
+<section>
+<div class=content>
+</div>
+<div class=content>
+</div>
+</section>
+</div>
+</div>
+</section>
+</div>
+<footer class=footer>
+<div class=uk-container>
+<div class="uk-grid-small uk-child-width-1-4@m uk-text-center uk-flex-center uk-margin-medium-bottom" uk-grid>
+<div class=uk-margin-small-bottom>
+<h5 class=uk-margin-small-bottom>Email</h5>
+<a href=mailto:ping%20%7bat%7d%20sebescudie.fr>ping {at} sebescudie.fr</a>
+</div>
+<div>
+<h5 class=uk-margin-small-bottom>Address</h5>
+<div uk-lightbox>
+<a href="https://www.openstreetmap.org/#map=15/48.8283/2.3695" data-caption="paris, fr" data-type=iframe>paris, fr</a>
+</div>
+</div>
+</div>
+<div class="footer-copyright uk-text-center" style=padding-bottom:1rem>
+<img loading=lazy src=https://mirrors.creativecommons.org/presskit/icons/cc.svg style=height:1.2em;width:1.2em alt="Creative Commons">
 <img loading=lazy src=https://mirrors.creativecommons.org/presskit/icons/by.svg style=height:1.2em;width:1.2em alt=CC-BY>
 2020
-seb escudie</div></footer><script src=https://cdn.jsdelivr.net/npm/uikit@3.2.6/dist/js/uikit.min.js></script><script src=https://cdn.jsdelivr.net/npm/uikit@3.2.6/dist/js/uikit-icons.min.js></script></body></html>
+seb escudie
+</div>
+</footer>
+<script src=https://cdn.jsdelivr.net/npm/uikit@3.2.6/dist/js/uikit.min.js></script>
+<script src=https://cdn.jsdelivr.net/npm/uikit@3.2.6/dist/js/uikit-icons.min.js></script>
+</body>
+</html>

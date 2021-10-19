@@ -1,0 +1,225 @@
+<!doctype html><style>html{height:100vh}body{min-height:100vh;display:grid;grid-template-rows:1fr auto}.footer{grid-row-start:2;grid-row-end:3}</style>
+<html lang=en-us><head>
+<meta charset=utf-8>
+<title>sebescudie</title>
+<meta name=viewport content="width=device-width,initial-scale=1">
+<meta name=description property="og:description" content="Writeup du CTF Memory Forensics Defcon 2019">
+<meta name=image property="og:image" content="/">
+<meta name=author content="seb escudie">
+<meta name=generator content="Hugo 0.88.1">
+<link rel=stylesheet href=https://cdn.jsdelivr.net/npm/uikit@3.2.6/dist/css/uikit.min.css>
+<link rel=stylesheet href=/css/style.min.css integrity media=screen>
+<link rel=stylesheet href=/css/syntax.min.css integrity media=screen>
+<script src=https://cdn.jsdelivr.net/npm/mailgo@0.9.14/dist/mailgo.min.js defer></script>
+<link rel=apple-touch-icon sizes=180x180 href=/apple-touch-icon.png>
+<link rel=icon type=image/png sizes=32x32 href=/favicon-32x32.png>
+<link rel=icon type=image/png sizes=16x16 href=/favicon-16x16.png>
+<link rel=manifest href=/site.webmanifest>
+</head>
+<body class=blog>
+<div class=wrapper><div uk-sticky="sel-target: .uk-navbar-container; cls-active: uk-navbar-sticky; bottom: #transparent-sticky-navbar">
+<nav class="uk-navbar-container uk-margin" uk-navbar="mode: click;" style=padding-right:3rem>
+<div class=uk-navbar-right>
+<ul class="uk-navbar-nav uk-visible@s">
+<li><a style=font-size:18px;text-transform:none href=/> home
+</a></li>
+<li><a style=font-size:18px;text-transform:none href=/about>about</a></li>
+<li class=uk-active><a style=font-size:18px;text-transform:none href=/blog>blog</a></li>
+<li><a style=font-size:18px;text-transform:none href=/contact>contact</a></li>
+<li><a style=font-size:18px;text-transform:none href=/portfolio>portfolio</a></li>
+</ul>
+<a class="uk-navbar-toggle uk-hidden@s" uk-toggle="target: #sidenav" uk-navbar-toggle-icon href=#></a>
+</div>
+</nav>
+</div>
+<div id=sidenav uk-offcanvas="overlay: true">
+<div class="uk-offcanvas-bar uk-flex uk-flex-column">
+<ul class="uk-nav uk-nav-primary uk-nav-center uk-margin-auto-vertical">
+<li><a style=font-size:18px href> home </a></li>
+<li><a style=font-size:18px href=/about>about</a></li>
+<li class=uk-active><a style=font-size:18px href=/blog>blog</a></li>
+<li><a style=font-size:18px href=/contact>contact</a></li>
+<li><a style=font-size:18px href=/portfolio>portfolio</a></li>
+</ul>
+</div>
+</div>
+<style>p{margin:0}.people-wrap{display:inline-flex;margin-top:10px}.people-image{display:block;border-radius:50%}.people{margin-left:20px;margin-right:20px}.name{margin:auto}h1,h2,h3,h4,h5,h6{color:#000;font-family:Roboto,sans-serif;line-height:1.2;margin-top:2rem}.content img{box-shadow:0 4px 8px rgba(0,0,0,.2),0 6px 20px rgba(0,0,0,.19);display:block;margin-left:auto;margin-right:auto;margin-bottom:30px}.content video{box-shadow:0 4px 8px rgba(0,0,0,.2),0 6px 20px rgba(0,0,0,.19);display:block;margin:0 auto;max-width:60vw;max-height:60vh;margin-bottom:30px}iframe{display:block;margin-left:auto;margin-right:auto;margin-bottom:30px}p{margin-bottom:1em}body p:last-child{margin-bottom:0}img.skills{height:80px}@media only screen and (min-width:960px){.content img{max-width:60vw;max-height:60vh}.content img{max-width:60vw;max-height:60vh}}.content{width:90vw;max-width:1200px}table{font-family:arial,sans-serif;border-collapse:collapse;width:100%}td,th{border:1px solid #ddd;text-align:left;padding:8px}</style>
+<section>
+<div class="uk-container uk-margin-large-bottom uk-margin-medium-top">
+<h1 class="uk-text-center uk-heading-medium">Defcon DFIR 2019 CTF</h1>
+<p class="uk-text-center uk-text-lead">Writeup du CTF Memory Forensics Defcon 2019</p>
+<hr class=full-width>
+<div class=content>
+<h2 id=bonjour>Bonjour</h2>
+<p>Ça faisait longtemps! En cherchant un CTF orienté analyse mémoire, je suis tombé sur le <a href=https://defcon2019.ctfd.io/>CTF DFIR du Defcon 2019</a>. Allons-y donc pour la partie Memory Forensics! J&rsquo;ai choisi cette fois-ci de masquer les réponses.</p>
+<h3 id=get-your-volatility-on>get your volatility on</h3>
+<p><em>What is the SHA1 hash of triage.mem?</em></p>
+<p>On nous demande pour commencer de calculer le <code>sha1</code> du dump mémoire. Et voilà :</p>
+<div class=highlight><pre tabindex=0 style=color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4><code class=language-bash data-lang=bash>┌──<span style=color:#f92672>(</span>kali㉿kali<span style=color:#f92672>)</span>-<span style=color:#f92672>[</span>~/Documents/volatility/2.6<span style=color:#f92672>]</span>
+└─$ sha1sum ~/Downloads/Triage-Memory.mem          
+****************************************  /home/kali/Downloads/Triage-Memory.mem
+</code></pre></div><h3 id=pr0file>pr0file</h3>
+<p><em>What profile is the most appropriate for this machine? (ex: Win10x86_14393)</em></p>
+<p>Maintenant, on nous demande d&rsquo;identifier le profil du dump. Il suffit de demander à <code>imageinfo</code> :</p>
+<div class=highlight><pre tabindex=0 style=color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4><code class=language-bash data-lang=bash>┌──<span style=color:#f92672>(</span>kali㉿kali<span style=color:#f92672>)</span>-<span style=color:#f92672>[</span>~/Documents/volatility/2.6<span style=color:#f92672>]</span>
+└─$ python vol.py -f ~/Downloads/Triage-Memory.mem imageinfo
+Volatility Foundation Volatility Framework 2.6
+INFO    : volatility.debug    : Determining profile based on KDBG search...
+          Suggested Profile<span style=color:#f92672>(</span>s<span style=color:#f92672>)</span> : *******, *******, *******, *******, *******, *******
+<span style=color:#f92672>[</span>...<span style=color:#f92672>]</span>
+</code></pre></div><h3 id=hey-write-this-down>hey, write this down</h3>
+<p><em>What was the process ID of notepad.exe?</em></p>
+<p>Ici, on nous demande le PID de <code>notepad.exe</code>. Ce qui est tout à fait trivial grâce à <code>pslist</code> :</p>
+<div class=highlight><pre tabindex=0 style=color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4><code class=language-bash data-lang=bash>┌──<span style=color:#f92672>(</span>kali㉿kali<span style=color:#f92672>)</span>-<span style=color:#f92672>[</span>~/Documents/volatility/2.6<span style=color:#f92672>]</span>
+└─$ python vol.py -f ~/Downloads/Triage-Memory.mem --profile<span style=color:#f92672>=</span>Win7SP1x64 pslist | grep <span style=color:#e6db74>&#34;notepad&#34;</span>                                                                             <span style=color:#ae81ff>130</span> ⨯
+Volatility Foundation Volatility Framework 2.6
+0xfffffa80054f9060 notepad.exe            ****   ****      <span style=color:#ae81ff>1</span>       <span style=color:#ae81ff>60</span>      <span style=color:#ae81ff>1</span>      <span style=color:#ae81ff>0</span> 2019-03-22 05:32:22 UTC+0000  
+</code></pre></div><h3 id=wscript-can-haz-children>wscript can haz children</h3>
+<p><em>Name the child processes of wscript.exe.</em></p>
+<p>On nous demande maintenant de trouver les process enfants de <code>wscript.exe</code>. J&rsquo;ai commencé par faire un <code>pslist</code> pour trouver le PID dudit <code>wscript</code>, et ensuite re-<code>pslist</code> en faisant un <code>grep</code> sur le PID précédemment trouvé. Ça nous sort un seul process qui est bien notre flag!</p>
+<div class=highlight><pre tabindex=0 style=color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4><code class=language-bash data-lang=bash>┌──<span style=color:#f92672>(</span>kali㉿kali<span style=color:#f92672>)</span>-<span style=color:#f92672>[</span>~/Documents/volatility/2.6<span style=color:#f92672>]</span>
+└─$ python vol.py -f ~/Downloads/Triage-Memory.mem --profile<span style=color:#f92672>=</span>Win7SP1x64 pslist | grep <span style=color:#e6db74>&#34;****&#34;</span>   
+Volatility Foundation Volatility Framework 2.6
+0xfffffa8005a80060 wscript.exe            ****   ****      <span style=color:#ae81ff>8</span>      <span style=color:#ae81ff>312</span>      <span style=color:#ae81ff>1</span>      <span style=color:#ae81ff>1</span> 2019-03-22 05:35:32 UTC+0000                                 
+0xfffffa8005a1d9e0 **********.exe         ****   ****      <span style=color:#ae81ff>5</span>      <span style=color:#ae81ff>109</span>      <span style=color:#ae81ff>1</span>      <span style=color:#ae81ff>1</span> 2019-03-22 05:35:33 UTC+0000 
+</code></pre></div><h3 id=tcpip-settings>tcpip settings</h3>
+<p><em>What was the IP address of the machine at the time the RAM dump was created?</em></p>
+<p>Hop, gogo <code>netscan</code> :</p>
+<div class=highlight><pre tabindex=0 style=color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4><code class=language-bash data-lang=bash>──<span style=color:#f92672>(</span>kali㉿kali<span style=color:#f92672>)</span>-<span style=color:#f92672>[</span>~/Documents/volatility/2.6<span style=color:#f92672>]</span>
+└─$ python vol.py -f ~/Downloads/Triage-Memory.mem --profile<span style=color:#f92672>=</span>Win7SP1x64 netscan 
+Volatility Foundation Volatility Framework 2.6
+Offset<span style=color:#f92672>(</span>P<span style=color:#f92672>)</span>          Proto    Local Address                  Foreign Address      State            Pid      Owner          Created
+0x13e057300        UDPv4    ***.***.***.***                *:*                                   <span style=color:#ae81ff>2888</span>     svchost.exe    2019-03-22 05:32:20 UTC+0000
+0x13e05b4f0        UDPv6    ***.***.***.***                *:*                                   <span style=color:#ae81ff>2888</span>     svchost.exe    2019-03-22 05:32:20 UTC+0000
+0x13e05b790        UDPv6    ***.***.***.***                *:*                                   <span style=color:#ae81ff>2888</span>     svchost.exe    2019-03-22 05:32:20 UTC+0000
+<span style=color:#f92672>[</span>...<span style=color:#f92672>]</span>
+</code></pre></div><p>J&rsquo;ai coupé les résultats, mais une adresse locale semble sortir du lot : il s&rsquo;agit de notre flag.</p>
+<h3 id=intel>intel</h3>
+<p><em>Based on the answer regarding to the infected PID, can you determine what the IP of the attacker was?</em></p>
+<p>La question fait référence à la question sur le process enfant : on y avait identifié un process avec un nom pour le moins étrange. Quand on regarde les résultats du <code>netscan</code> fait plus, haut on retrouve ledit process connecté à une IP sur le port <code>4444</code> (Metasploit ?). Cet IP est notre flag.</p>
+<h3 id=i-3-windows-dependencies>i &lt;3 windows dependencies</h3>
+<p><em>What process name is VCRUNTIME140.dll associated with?</em></p>
+<p>Ok, ici on cherche à savoir quel process utilise <code>VCRUNTIME140.dll</code>.</p>
+<p>Pour cela, un petit tour dans l&rsquo;aide de <code>vol</code> nous oriente vers <code>dlllist</code> qui sert à nous lister les dll chargées par chaque process. Le résultat étant très (très) long, on peut essayer de faire un <code>grep</code> sur <code>VCRUNTIME140.dll</code>.</p>
+<p>Sauf que le plugin affiche sur 3 lignes des infos de chaque process (nom, PID, etc), et seulement après les dll chargées ligne par ligne. J&rsquo;ai donc ajouté les arguments <code>-B</code> et <code>-A</code> à <code>grep</code> pour sortir les <code>n</code> lignes avant et après le match. Je ne sais pas si c&rsquo;est la bonne façon de faire (c&rsquo;est un peu bourrin) mais après avoir tâtonné, ça fonctionne !</p>
+<div class=highlight><pre tabindex=0 style=color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4><code class=language-bash data-lang=bash>┌──<span style=color:#f92672>(</span>kali㉿kali<span style=color:#f92672>)</span>-<span style=color:#f92672>[</span>~/Documents/volatility/2.6<span style=color:#f92672>]</span>
+└─$ python vol.py -f ~/Downloads/Triage-Memory.mem --profile<span style=color:#f92672>=</span>Win7SP1x64 dlllist | grep <span style=color:#e6db74>&#34;VCRUNTIME140.dll&#34;</span> -B <span style=color:#ae81ff>50</span> -A <span style=color:#ae81ff>50</span>
+<span style=color:#f92672>[</span>...<span style=color:#f92672>]</span>
+************************************************************************
+Blablablabla   pid:   ****
+Command line : <span style=color:#e6db74>&#34;C:\Program Files\***\****.exe&#34;</span>
+Service Pack <span style=color:#ae81ff>1</span>
+
+Base                             Size          LoadCount Path
+------------------ ------------------ ------------------ ----
+0x000000013f420000           0xa9d000             0xffff <span style=color:#e6db74>&#34;C:\Program Files\***\****.exe&#34;</span>
+<span style=color:#f92672>[</span>...<span style=color:#f92672>]</span>
+</code></pre></div><h3 id=mal-ware-are-you>mal-ware-are-you</h3>
+<p><em>What is the md5 hash value the potential malware on the system?</em></p>
+<p>On avait réussi à identifier le nom d&rsquo;un process qui semblait malicieux dans une question précédente. J&rsquo;ai cherché ledit process avec <code>filescan</code> et ai dumpé le fichier, puis calculé son MD5, mais ce n&rsquo;est pas la bonne réponse.</p>
+<p>J&rsquo;ai donc fait un <code>cmdline</code> sur ce process pour voir comment il avait été lancé, mais rien de concluant non-plus (ceci dit j&rsquo;ai trouvé quelque chose qui nous servira plus tard).</p>
+<p>Je passe donc cette question pour l&rsquo;instant !</p>
+<h3 id=lm-get-bobs-hash>lm-get bobs hash</h3>
+<p><em>What is the LM hash of bobs account?</em></p>
+<p>On nous demande de trouver le hash LM de Bob. Il se trouve que <code>vol</code> vient de base avec le plugin <code>hashdump</code> qui sert justement à ça :</p>
+<div class=highlight><pre tabindex=0 style=color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4><code class=language-bash data-lang=bash>┌──<span style=color:#f92672>(</span>kali㉿kali<span style=color:#f92672>)</span>-<span style=color:#f92672>[</span>~/Documents/volatility/2.6<span style=color:#f92672>]</span>
+└─$ python vol.py -f ~/Downloads/Triage-Memory.mem --profile<span style=color:#f92672>=</span>Win7SP1x64 hashdump
+Volatility Foundation Volatility Framework 2.6
+Administrator:500:aad3b435b51404eeaad3b435b51404ee:31d6cfe0d16ae931b73c59d7e0c089c0:::
+Guest:501:aad3b435b51404eeaad3b435b51404ee:31d6cfe0d16ae931b73c59d7e0c089c0:::
+Bob:1000:******************************:******************************:::
+</code></pre></div><h3 id=vad-the-impaler>vad the impaler</h3>
+<p><em>What protections does the VAD node at 0xfffffa800577ba10 have?</em></p>
+<p>J&rsquo;ai déjà entendu parler des VAD mais n&rsquo;ai aucune idée de ce dont il s&rsquo;agit. <a href=https://imphash.medium.com/windows-process-internals-a-few-concepts-to-know-before-jumping-on-memory-forensics-part-4-16c47b89e826>Cet article</a> sur Medium semble donner une bonne définition du sujet.</p>
+<p>On nous donne donc l&rsquo;adresse d&rsquo;un VAD et on nous demande son niveau de protection. Essayons de faire un <code>grep "0xfffffa800577ba10"</code> sur <code>vadinfo</code> :</p>
+<div class=highlight><pre tabindex=0 style=color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4><code class=language-bash data-lang=bash>┌──<span style=color:#f92672>(</span>kali㉿kali<span style=color:#f92672>)</span>-<span style=color:#f92672>[</span>~/Documents/volatility/2.6<span style=color:#f92672>]</span>
+└─$ python vol.py -f ~/Downloads/Triage-Memory.mem --profile<span style=color:#f92672>=</span>Win7SP1x64 vadinfo | grep <span style=color:#e6db74>&#34;0xfffffa800577ba10&#34;</span> -A <span style=color:#ae81ff>5</span>
+Volatility Foundation Volatility Framework 2.6
+VAD node @ 0xfffffa800577ba10 Start 0x0000000000030000 End 0x0000000000033fff Tag Vad 
+Flags: NoChange: 1, Protection: <span style=color:#ae81ff>1</span>
+Protection: ****
+Vad Type: VadNone
+ControlArea @fffffa8005687a50 Segment fffff8a000c4f870
+NumberOfSectionReferences:          <span style=color:#ae81ff>1</span> NumberOfPfnReferences:           <span style=color:#ae81ff>0</span>
+</code></pre></div><p>J&rsquo;avais fait un premier essai sans <code>-A</code> mais n&rsquo;ai bien sûr rien eu d&rsquo;intéressant. Et la valeur du champ <code>Protection</code> ici est bien notre flag !</p>
+<h3 id=more-vads>more vads?!</h3>
+<p><em>What protections did the VAD starting at 0x00000000033c0000 and ending at 0x00000000033dffff have?</em></p>
+<p>Cette fois ci, on nous demande le niveau de protection d&rsquo;un VAD en nous donnant ses adresses de début et de fin. Est-ce qu&rsquo;on pourrait s&rsquo;en tirer de la même manière qu&rsquo;au dessus ?</p>
+<div class=highlight><pre tabindex=0 style=color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4><code class=language-bash data-lang=bash>┌──<span style=color:#f92672>(</span>kali㉿kali<span style=color:#f92672>)</span>-<span style=color:#f92672>[</span>~/Documents/volatility/2.6<span style=color:#f92672>]</span>
+└─$ python vol.py -f ~/Downloads/Triage-Memory.mem --profile<span style=color:#f92672>=</span>Win7SP1x64 vadinfo | grep <span style=color:#e6db74>&#34;Start 0x00000000033c0000 End 0x00000000033dffff&#34;</span> -A <span style=color:#ae81ff>5</span>        
+Volatility Foundation Volatility Framework 2.6
+VAD node @ 0xfffffa80052652b0 Start 0x00000000033c0000 End 0x00000000033dffff Tag VadS
+Flags: CommitCharge: 32, PrivateMemory: 1, Protection: <span style=color:#ae81ff>24</span>
+Protection: ****
+Vad Type: VadNone
+<span style=color:#f92672>[</span>...<span style=color:#f92672>]</span>
+</code></pre></div><p>On dirait bien que oui.</p>
+<h3 id=vacation-bible-school>vacation bible school</h3>
+<p><em>There was a VBS script run on the machine. What is the name of the script? (submit without file extension)</em></p>
+<p>Quelques questions plus haut j&rsquo;avais cherché à savoir comment notre process malicieux avait été lancé, et il se trouve que <code>cmdline</code> nous montrait un fichier <code>.vbs</code>. C&rsquo;est bien notre flag!</p>
+<h3 id=thx-microsoft>thx microsoft</h3>
+<p><em>An application was run at 2019-03-07 23:06:58 UTC, what is the name of the program? (Include extension)</em></p>
+<p>Je ne sais pas trop par où commencer là dessus. Comme ça, ça me fait penser à l'<a href=https://www.ssi.gouv.fr/en/publication/amcache-analysis/>AMCache</a>, mais le plugin <code>amcache</code> ne s&rsquo;avère pas concluant :</p>
+<div class=highlight><pre tabindex=0 style=color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4><code class=language-bash data-lang=bash>┌──<span style=color:#f92672>(</span>kali㉿kali<span style=color:#f92672>)</span>-<span style=color:#f92672>[</span>~/Documents/volatility/2.6<span style=color:#f92672>]</span>
+└─$ python vol.py -f ~/Downloads/Triage-Memory.mem --profile<span style=color:#f92672>=</span>Win7SP1x64 amcache
+Volatility Foundation Volatility Framework 2.6
+The requested key could not be found in the hive<span style=color:#f92672>(</span>s<span style=color:#f92672>)</span> searched
+</code></pre></div><p>En fouillant sur l&rsquo;internet, je suis tombé sur <a href=https://www.andreafortuna.org/2017/10/16/amcache-and-shimcache-in-forensic-analysis/>cet article</a> qui nous dit que &ldquo;Amcache and Shimcache can provide a timeline of which program was executed and when it was first run and last modified&rdquo;. Et je me souvenais avoir croisé dans l&rsquo;aide de <code>vol</code> un plugin <code>shimcache</code>. Après un premier run pour voir à quoi ressemblait l&rsquo;output, j&rsquo;ai fait un <code>grep</code> sur la date indiquée dans l’énoncé pour arriver au flag!</p>
+<div class=highlight><pre tabindex=0 style=color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4><code class=language-bash data-lang=bash>┌──<span style=color:#f92672>(</span>kali㉿kali<span style=color:#f92672>)</span>-<span style=color:#f92672>[</span>~/Documents/volatility/2.6<span style=color:#f92672>]</span>
+└─$ python vol.py -f ~/Downloads/Triage-Memory.mem --profile<span style=color:#f92672>=</span>Win7SP1x64 shimcache | grep <span style=color:#e6db74>&#34;2019-03-07 23:06:58&#34;</span>
+Volatility Foundation Volatility Framework 2.6
+2019-03-07 23:06:58 UTC+0000   <span style=color:#ae81ff>\?</span>?<span style=color:#ae81ff>\C</span>:<span style=color:#ae81ff>\P</span>rogram Files <span style=color:#f92672>(</span>x86<span style=color:#f92672>)</span><span style=color:#ae81ff>\*</span>**<span style=color:#ae81ff>\*</span>***<span style=color:#ae81ff>\*</span>******.exe
+</code></pre></div><h3 id=lightbulb-moment>lightbulb moment</h3>
+<p><em>What was written in notepad.exe in the time of the memory dump?</em></p>
+<p>Comme d&rsquo;habitude, le plugin <code>notepad</code> ne fonctionne pas, je vais donc regarder du côté de <code>pslist</code> quel est le PID de <code>notepad.exe</code> et essayer de voir avec quelle <code>cmdline</code> il a été lancé, voir si on ne peut pas récupérer un ficher&mldr; et bien non. <code>notepad.exe</code> a été lancé sans aucun argument.</p>
+<p>Peut-être dumper la zone mémoire et faire un strings dessus ? C&rsquo;est trop fastidieux, il doit bien y avoir un autre moyen.</p>
+<p>Après quelques recherches sur l&rsquo;internet, je tombe sur <a href=https://www.andreafortuna.org/2018/03/02/volatility-tips-extract-text-typed-in-a-notepad-window-from-a-windows-memory-dump/>cet article</a> qui nous parle justement de comment extraire du texte du bloc note depuis un dump mémoire. Il y est fait une précision très intéressante : &ldquo;the <code>-e l</code> switch is needed because notepad stores text in 16-bit little-endian:&rdquo;. Aha! Effectivement, si on fait un <code>strings</code> sur le dump avec cette option, le contenu est bien plus digeste ! Comme je n&rsquo;ai aucune idée de quoi chercher, je scroll un peu puis fait un <code>CTRL + F</code> sur &ldquo;flag&rdquo;, et c&rsquo;est le bingo, notre flag est bien là !</p>
+<h3 id=8675309>8675309</h3>
+<p><em>What is the shortname of the file at file record 59045?</em></p>
+<p>Là comme ça, ça me fait penser à la MFT.. donc allons-y avec <code>mftparser</code> et <code>grep</code> :</p>
+<div class=highlight><pre tabindex=0 style=color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4><code class=language-bash data-lang=bash>┌──<span style=color:#f92672>(</span>kali㉿kali<span style=color:#f92672>)</span>-<span style=color:#f92672>[</span>~/Documents/volatility/2.6<span style=color:#f92672>]</span>
+└─$ python vol.py -f ~/Downloads/Triage-Memory.mem --profile<span style=color:#f92672>=</span>Win7SP1x64 mftparser | grep <span style=color:#e6db74>&#34;59045&#34;</span> -A <span style=color:#ae81ff>30</span>
+</code></pre></div><p>Je ne donne pas les résultats de la commande ici car ils sont un peu longs, mais le flag s&rsquo;y trouve bien!</p>
+<h3 id=whats-a-metasploit>whats-a-metasploit?</h3>
+<p><em>This box was exploited and is running meterpreter. What PID was infected?</em></p>
+<p>En parcourant les résultats de <code>netscan</code> plus tôt, j&rsquo;ai vu passer un port qui ressemble beaucoup au port par défaut de Metasploit. Et si l&rsquo;on regarde le PID associé au process connecté à ce port, on a bien notre flag !</p>
+<h2 id=conclusion>Conclusion</h2>
+<p>Intéressant, j&rsquo;ai pu en apprendre un peu plus sur le Shimcache et les VAD ! En revanche, à la différence des CTF Memlabs, j&rsquo;ai trouvé que tout était très centré sur Volatility, là où Memlabs peut demander des trucs un peu plus drôles comme désassembler un binaire ou passer un memdump dans GIMP :)</p>
+<p>Je suis allé lire un writeup pour avoir la solution à l&rsquo;histoire du hash MD5, et je n&rsquo;étais en fait pas loin du but : il fallait faire un <code>procdump</code> et non pas un <code>dumpfiles</code> sur le process chelou. A ce stade je suis pas sûr de comprendre la différence entre dumper un fichier execultable avec <code>filescan</code>/<code>dumpfiles</code> et <code>procdump</code>. J&rsquo;imagine que <code>dumpfiles</code> n&rsquo;est tout simplement pas fait pour les executables, à la différence de <code>procdump</code>. Bon à savoir !</p>
+</div>
+<div class=uk-padding-small></div>
+<section>
+<div class=content>
+</div>
+<div class=content>
+</div>
+</section>
+</div>
+</div>
+</section>
+</div>
+<footer class=footer>
+<div class=uk-container>
+<div class="uk-grid-small uk-child-width-1-4@m uk-text-center uk-flex-center uk-margin-medium-bottom" uk-grid>
+<div class=uk-margin-small-bottom>
+<h5 class=uk-margin-small-bottom>Email</h5>
+<a href=mailto:ping%20%7bat%7d%20sebescudie.fr>ping {at} sebescudie.fr</a>
+</div>
+<div>
+<h5 class=uk-margin-small-bottom>Address</h5>
+<div uk-lightbox>
+<a href="https://www.openstreetmap.org/#map=15/48.8283/2.3695" data-caption="paris, fr" data-type=iframe>paris, fr</a>
+</div>
+</div>
+</div>
+<div class="footer-copyright uk-text-center" style=padding-bottom:1rem>
+<img loading=lazy src=https://mirrors.creativecommons.org/presskit/icons/cc.svg style=height:1.2em;width:1.2em alt="Creative Commons">
+<img loading=lazy src=https://mirrors.creativecommons.org/presskit/icons/by.svg style=height:1.2em;width:1.2em alt=CC-BY>
+2020
+seb escudie
+</div>
+</footer>
+<script src=https://cdn.jsdelivr.net/npm/uikit@3.2.6/dist/js/uikit.min.js></script>
+<script src=https://cdn.jsdelivr.net/npm/uikit@3.2.6/dist/js/uikit-icons.min.js></script>
+</body>
+</html>
